@@ -156,6 +156,10 @@ class TransferStatusUpdater {
             }
         }
 
+        if (TransferState.IN_PROGRESS.equals(newState)) {
+            shouldNotNotify = false;
+        }
+
         if (shouldNotNotify) {
             return;
         }
