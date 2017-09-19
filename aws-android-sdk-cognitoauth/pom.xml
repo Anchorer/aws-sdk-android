@@ -55,7 +55,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <sdk>
-                        <platform>15</platform>
+                        <platform>25</platform>
                     </sdk>
                 </configuration>
       </plugin>
