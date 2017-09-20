@@ -189,6 +189,30 @@ class TransferStatusUpdater {
     }
 
     /**
+     * Trigger onStateChanged Callback for specific transfer
+     * @param id    Transfer id
+     * @param newState  new state
+     */
+    void triggerStateChangeCallback(final int id, final TransferState newState) {
+        final List<TransferListener> list = LISTENERS.get(id);
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (final TransferListener l : list) {
+                    l.onStateChanged(id, newState);
+                }
+                if (TransferState.COMPLETED.equals(newState)) {
+                    list.clear();
+                }
+            }
+        });
+    }
+
+    /**
      * Updates the transfer progress of a transfer. It will trigger
      * {@link TransferListener#onProgressChanged(int, long, long)} of associated
      * LISTENERS if the update exceeds either time threshold.
