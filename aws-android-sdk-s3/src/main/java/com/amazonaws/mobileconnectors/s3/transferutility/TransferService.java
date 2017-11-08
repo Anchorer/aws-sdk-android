@@ -320,7 +320,9 @@ public class TransferService extends Service {
                 if (transfer != null) {
                     updater.addTransfer(transfer);
                     // while resuming a transfer, if the transfer is null, create a new one, and trigger a state callback instantly. (for UI display)
-                    updater.triggerStateChangeCallback(id, transfer.state);
+                    if (transfer.state != TransferState.FAILED) {
+                        updater.triggerStateChangeCallback(id, transfer.state);
+                    }
                 } else {
                     LOGGER.error("Can't find transfer: " + id);
                 }

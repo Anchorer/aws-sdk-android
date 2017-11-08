@@ -179,9 +179,14 @@ class TransferStatusUpdater {
                 }
                 // remove all LISTENERS when the transfer is in a final state so
                 // as to release resources asap.
-                if (TransferState.COMPLETED.equals(newState)
+                /*if (TransferState.COMPLETED.equals(newState)
                         || TransferState.FAILED.equals(newState)
                         || TransferState.CANCELED.equals(newState)) {
+                    list.clear();
+                }*/
+
+                // 这里只针对COMPLETED状态进行清除操作。对于FAILED状态，因为考虑需要resume，因此不清空listeners
+                if (TransferState.COMPLETED.equals(newState)) {
                     list.clear();
                 }
             }
