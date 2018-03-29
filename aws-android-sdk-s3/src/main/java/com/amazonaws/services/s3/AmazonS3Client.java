@@ -4043,7 +4043,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         String resourcePath = "/" +
                 ((bucketName != null) ? bucketName + "/" : "") +
-                ((key != null) ? S3HttpUtils.urlEncode(key, true) : "") +
+                ((key != null) ? key : "") +
                 ((subResource != null) ? "?" + subResource : "");
 
         // Make sure the resource-path for signing does not contain
@@ -4192,8 +4192,8 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     private static void populateRequestWithCopyObjectParameters(
             Request<? extends AmazonWebServiceRequest> request, CopyObjectRequest copyObjectRequest) {
         String copySourceHeader =
-                "/" + S3HttpUtils.urlEncode(copyObjectRequest.getSourceBucketName(), true)
-                        + "/" + S3HttpUtils.urlEncode(copyObjectRequest.getSourceKey(), true);
+                "/" + copyObjectRequest.getSourceBucketName()
+                        + "/" + copyObjectRequest.getSourceKey();
         if (copyObjectRequest.getSourceVersionId() != null) {
             copySourceHeader += "?versionId=" + copyObjectRequest.getSourceVersionId();
         }
@@ -4251,8 +4251,8 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     private static void populateRequestWithCopyPartParameters(Request<?> request,
             CopyPartRequest copyPartRequest) {
         String copySourceHeader =
-                "/" + S3HttpUtils.urlEncode(copyPartRequest.getSourceBucketName(), true)
-                        + "/" + S3HttpUtils.urlEncode(copyPartRequest.getSourceKey(), true);
+                "/" + copyPartRequest.getSourceBucketName()
+                        + "/" + copyPartRequest.getSourceKey();
         if (copyPartRequest.getSourceVersionId() != null) {
             copySourceHeader += "?versionId=" + copyPartRequest.getSourceVersionId();
         }
@@ -5428,14 +5428,11 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         final URI ep = endpoint == null ? this.endpoint : endpoint;
         if (shouldUseVirtualAddressing(ep, bucketName)) {
             request.setEndpoint(convertToVirtualHostEndpoint(ep, bucketName));
-            request.setResourcePath(
-                    S3HttpUtils.urlEncode(getHostStyleResourcePath(key), true));
+            request.setResourcePath(getHostStyleResourcePath(key));
         } else {
             request.setEndpoint(ep);
             if (bucketName != null) {
-                request.setResourcePath(
-                        S3HttpUtils.urlEncode(getPathStyleResourcePath(bucketName, key),
-                                true));
+                request.setResourcePath(getPathStyleResourcePath(bucketName, key));
             }
         }
     }
