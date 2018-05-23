@@ -1,5 +1,5 @@
 /**
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -124,6 +124,16 @@ class TransferStatusUpdater {
     }
 
     /**
+     * Removes a transfer from the persistent store.
+     *
+     * @param id id of the transfer to remove
+     */
+    void removeTransferRecordFromDB(final int id) {
+        S3ClientReference.remove(id);
+        dbUtil.deleteTransferRecords(id);
+    }
+
+    /**
      * Updates the state of an active transfer. If the transfer isn't tracked,
      * i.e. not active, it won't do anything. It writes the status of the
      * transfer, including current state, bytes transfer, bytes total, etc into
@@ -167,6 +177,9 @@ class TransferStatusUpdater {
         // invoke LISTENERS
         final List<TransferListener> list = LISTENERS.get(id);
         if (list == null || list.isEmpty()) {
+            if (TransferState.COMPLETED.equals(newState)) {
+                removeTransferRecordFromDB(id);
+            }
             return;
         }
 
@@ -178,7 +191,7 @@ class TransferStatusUpdater {
                     l.onStateChanged(id, newState);
                 }
                 // remove all LISTENERS when the transfer is in a final state so
-                // as to release resources asap.
+                // as to release resources ASAP.
                 /*if (TransferState.COMPLETED.equals(newState)
                         || TransferState.FAILED.equals(newState)
                         || TransferState.CANCELED.equals(newState)) {
@@ -212,6 +225,10 @@ class TransferStatusUpdater {
                 }
                 if (TransferState.COMPLETED.equals(newState)) {
                     list.clear();
+                }
+
+                if (TransferState.COMPLETED.equals(newState)) {
+                    removeTransferRecordFromDB(id);
                 }
             }
         });

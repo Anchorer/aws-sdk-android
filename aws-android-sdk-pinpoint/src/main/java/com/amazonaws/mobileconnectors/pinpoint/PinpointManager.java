@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -105,7 +105,12 @@ public class PinpointManager {
             }
 
             if (config.getEnableTargeting()) {
-                this.targetingClient = new TargetingClient(pinpointContext);
+                if (config.getExecutor() != null) {
+                    this.targetingClient = new TargetingClient(pinpointContext, config.getExecutor());
+                } else {
+                    this.targetingClient = new TargetingClient(pinpointContext);
+                }
+
                 this.pinpointContext.setTargetingClient(this.targetingClient);
                 this.notificationClient.addDeviceTokenRegisteredHandler(new DeviceTokenRegisteredHandler() {
 

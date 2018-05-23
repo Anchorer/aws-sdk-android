@@ -1,5 +1,5 @@
 /*
-  * Copyright 2013-2017 Amazon.com, Inc. or its affiliates.
+  * Copyright 2017-2017 Amazon.com, Inc. or its affiliates.
   * All Rights Reserved.
   *
   * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,8 +25,6 @@ import android.util.Log;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.SDKGlobalConfiguration;
 
-import com.amazonaws.mobile.config.AWSConfiguration;
-
 import com.amazonaws.auth.AWSBasicCognitoIdentityProvider;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -39,11 +37,14 @@ import com.amazonaws.mobile.auth.core.signin.SignInManager;
 import com.amazonaws.mobile.auth.core.signin.SignInProvider;
 import com.amazonaws.mobile.auth.core.signin.SignInProviderResultHandler;
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils;
+import com.amazonaws.mobile.config.AWSConfiguration;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,9 +56,23 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.json.JSONArray;
+
 /**
  * The identity manager keeps track of the current sign-in provider and is responsible
  * for caching credentials.
+ * 
+ * <pre>
+ * // Create IdentityManager and set it as the default instance.
+ * IdentityManager idm = new IdentityManager(getApplicationContext(), 
+ *                                           new AWSConfiguration(getApplicationContext()));
+ * IdentityManager.setDefaultIdentityManager(idm);
+ * 
+ * // Use IdentityManager to retrieve the {@link com.amazonaws.auth.CognitoCachingCredentialsProvider}
+ * // object.
+ * IdentityManager.getDefaultIdentityManager().getUnderlyingProvider();
+ * 
+ * </pre>
  */
 public class IdentityManager {
 
@@ -102,7 +117,7 @@ public class IdentityManager {
     /** Configuration for the mobile helper. */
     private AWSConfiguration awsConfiguration;
 
-    /* Cognito client configuration. */
+    /* SDK Client configuration. */
     private final ClientConfiguration clientConfiguration;
 
     /** Executor service for obtaining credentials in a background thread. */
@@ -129,17 +144,19 @@ public class IdentityManager {
     private static IdentityManager defaultIdentityManager = null;
 
     /** 
-     * Shared Preferences Name 
-     * This key is used to store credentials in SharedPreferences
-     * and used by CognitoCachingCredentialsProvider
+     * SharedPreferences key name used to store the short-lived AWS Credentials
+     * by the CognitoCachingCredentialsProvider.
      */
     private static final String SHARED_PREF_NAME = "com.amazonaws.android.auth";
     
-    /** Shared Preferences Key */
+    /** 
+     * SharedPreferences key name used to store the expiration date for the 
+     * short-lived AWS Credentials.
+     */
     private static final String EXPIRATION_KEY = "expirationDate";
 
     /**
-     * Custom Cognito Identity Provider to handle refreshing the individual provider's tokens.
+     * Custom Amazon Cognito Identity Provider to handle refreshing the sign-in provider's token.
      */
     private class AWSRefreshingCognitoIdentityProvider extends AWSBasicCognitoIdentityProvider {
 
@@ -151,22 +168,33 @@ public class IdentityManager {
                                                     final ClientConfiguration clientConfiguration,
                                                     final Regions regions) {
             super(accountId, identityPoolId, clientConfiguration);
-            // Force refreshing ID provider to use same region as caching credentials provider
+            // Force refreshing Identity provider to use same region as 
+            // CognitoCachingCredentialsProvider
             this.cib.setRegion(Region.getRegion(regions));
         }
 
         @Override
         public String refresh() {
 
-            Log.d(LOG_TAG, "Refreshing token...");
-
             if (currentIdentityProvider != null) {
+                Log.d(LOG_TAG, "Storing the Refresh token in the loginsMap.");
                 final String newToken = currentIdentityProvider.refreshToken();
-
                 getLogins().put(currentIdentityProvider.getCognitoLoginKey(), newToken);
             }
             return super.refresh();
         }
+    }
+
+    /**
+     * Constructor that takes in the application context.
+     * 
+     * @param context the application context.
+     */
+    public IdentityManager(final Context context) {
+        this.appContext = context.getApplicationContext();
+        this.awsConfiguration = null;
+        this.clientConfiguration = null;
+        this.credentialsProviderHolder = null;
     }
 
     /**
@@ -183,7 +211,7 @@ public class IdentityManager {
         this.awsConfiguration = awsConfiguration;
         this.clientConfiguration = new ClientConfiguration().withUserAgent(awsConfiguration.getUserAgent());
         this.credentialsProviderHolder = new AWSCredentialsProviderHolder();
-        initializeCognito(this.appContext, this.clientConfiguration);
+        createCredentialsProvider(this.appContext, this.clientConfiguration);
     }
 
     /**
@@ -212,7 +240,7 @@ public class IdentityManager {
         }
 
         this.credentialsProviderHolder = new AWSCredentialsProviderHolder();
-        initializeCognito(this.appContext, this.clientConfiguration);
+        createCredentialsProvider(this.appContext, this.clientConfiguration);
     }
 
     /**
@@ -230,11 +258,12 @@ public class IdentityManager {
         this.appContext = context.getApplicationContext();
         this.clientConfiguration = clientConfiguration;
         this.credentialsProviderHolder = new AWSCredentialsProviderHolder();
-        setCredentialsProvider(context, credentialsProvider);
+        credentialsProviderHolder.setUnderlyingProvider(credentialsProvider);
     }
 
+
     /**
-     * Return the default IdentityManager
+     * Return the default instance of the IdentityManager
      *
      * @return defaultIdentityManager The default IdentityManager object
      */
@@ -243,7 +272,7 @@ public class IdentityManager {
     }
 
     /**
-     * Set the IdentityManager object created as the default
+     * Set the IdentityManager object passed in as the default instance
      *
      * @param identityManager The IdentityManager object to be set as the default
      */
@@ -253,7 +282,7 @@ public class IdentityManager {
     }
 
     /**
-     * Retrieve the AWSConfiguration object
+     * Retrieve the AWSConfiguration object that represents the `awsconfiguration.json`.
      *
      * @return AWSConfiguration Return the reference to the AWSConfiguration object
      */
@@ -262,9 +291,17 @@ public class IdentityManager {
     }
 
     /**
-     * Check if the credentials are expired.
+     * Set the AWSConfiguration.
+     * @param configuration
+     */
+    public void setConfiguration(AWSConfiguration configuration) {
+        this.awsConfiguration = configuration;
+    }
+
+    /**
+     * Check if the short-lived AWS Credentials are expired.
      *
-     * @return true if the cached Cognito credentials are expired, otherwise false.
+     * @return true if the cached short-lived AWS credentials are expired, otherwise false.
      */
     public boolean areCredentialsExpired() {
 
@@ -290,7 +327,7 @@ public class IdentityManager {
     /**
      * Retrieve the reference to AWSCredentialsProvider object.
      *
-     * @return the Cognito credentials provider.
+     * @return the holder to the CognitoCachingCredentialsProvider.
      */
     public AWSCredentialsProvider getCredentialsProvider() {
         return this.credentialsProviderHolder;
@@ -337,19 +374,17 @@ public class IdentityManager {
                     Log.e(LOG_TAG, exception.getMessage(), exception);
                 } finally {
                     final String result = identityId;
-                    Log.d(LOG_TAG, "Got user ID: " + identityId);
+                    Log.d(LOG_TAG, "Got Amazon Cognito Federated Identity ID: " + identityId);
 
-                    // Lint doesn't like early return inside a finally block, so nesting further inside the if here.
                     if (handler != null) {
                         ThreadUtils.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (exception != null) {
                                     handler.handleError(exception);
-                                    return;
+                                } else {
+                                    handler.onIdentityId(result);
                                 }
-
-                                handler.onIdentityId(result);
                             }
                         });
                     }
@@ -468,6 +503,14 @@ public class IdentityManager {
         }
     }
 
+    /**
+     * Set the loginMap of the CognitoCachingCredentialsProvider
+     * and invoke refresh. This retrieves the AWS Identity and the
+     * short-lived AWS Credentials to access other AWS resources.
+     * 
+     * @param loginMap the map with a key-value pair of 
+     *                 sign-in provider key and the token 
+     */
     private void refreshCredentialWithLogins(final Map<String, String> loginMap) {
       
         final CognitoCachingCredentialsProvider credentialsProvider =
@@ -479,12 +522,12 @@ public class IdentityManager {
         Log.d(LOG_TAG, "refresh credentials");
         credentialsProvider.refresh();
 
-        // expire credentials in 2 minutes.
-        appContext.getSharedPreferences(SHARED_PREF_NAME,
-            Context.MODE_PRIVATE).edit()
-                .putLong(credentialsProvider.getIdentityPoolId() + "." + EXPIRATION_KEY, System.currentTimeMillis() + (510*1000))
-                .commit();
-
+        // Set the expiration key of the Credentials Provider to 8 minutes, 30 seconds.
+        appContext.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+                  .edit()
+                  .putLong(credentialsProvider.getIdentityPoolId() + "." + EXPIRATION_KEY,
+                           System.currentTimeMillis() + (510 * 1000))
+                  .apply();
     }
 
     /**
@@ -500,16 +543,18 @@ public class IdentityManager {
     }
 
     /**
-     * Login with an identity provider (ie. Facebook, Twitter, etc.).
+     * Fetch the token from the SignIn provider and insert into the loginMap
+     * and then invoke {@link #refreshCredentialWithLogins(Map)} to set the
+     * loginsMap with the CredentialsProvider object in-order to federate 
+     * the token with Amazon Cognito Federated Identities.
      *
      * @param provider A sign-in provider.
      */
     public void federateWithProvider(final IdentityProvider provider) {
-        Log.d(LOG_TAG, "federateWithProvider");
+        Log.d(LOG_TAG, "federate with provider: Populate loginsMap with token.");
         final Map<String, String> loginMap = new HashMap<String, String>();
         loginMap.put(provider.getCognitoLoginKey(), provider.getToken());
         currentIdentityProvider = provider;
-        initializeCognito(this.appContext, this.clientConfiguration);
 
         executorService.submit(new Runnable() {
             @Override
@@ -573,150 +618,138 @@ public class IdentityManager {
         return true;
     }
 
-    private void handleStartupAuthResult(final Activity callingActivity,
-                                         final StartupAuthResultHandler startupAuthResultHandler,
-                                         final AuthException authException,
-                                         final Exception unAuthException) {
+    /**
+     * Invoke the onComplete method on the {@link StartupAuthResultHandler}
+     * callback object.
+     * 
+     * @param callingActivity the activity context
+     * @param startupAuthResultHandler the callback object
+     * @param ex the exception if raised during the resume session
+     */
+    private void completeHandler(final Activity callingActivity,
+                                 final StartupAuthResultHandler startupAuthResultHandler,
+                                 final AuthException ex) {
         runAfterStartupAuthDelay(callingActivity, new Runnable() {
             @Override
             public void run() {
                 startupAuthResultHandler.onComplete(new StartupAuthResult(IdentityManager.this,
-                    new StartupAuthErrorDetails(authException, unAuthException)));
+                    new StartupAuthErrorDetails(ex, null)));
             }
         });
-    }
-
-    private void handleUnauthenticated(final Activity callingActivity,
-                                       final StartupAuthResultHandler startupAuthResultHandler,
-                                       final AuthException ex) {
-        // Optional Sign-in can dispose the sign-in manager right away here, while mandatory sign-in, needs
-        // it to stay around a bit longer, since it will be required to call sign-in or sign-up.
-
-        SignInManager.dispose();
-
-        if (getCachedUserID() != null) {
-            handleStartupAuthResult(callingActivity, startupAuthResultHandler, ex, null);
-        }
-
-        getUserID(new IdentityHandler() {
-            @Override
-            public void onIdentityId(final String identityId) {
-                handleStartupAuthResult(callingActivity, startupAuthResultHandler, ex, null);
-            }
-
-            @Override
-            public void handleError(final Exception exception) {
-                handleStartupAuthResult(callingActivity, startupAuthResultHandler, ex, exception);
-            }
-        });
-        handleStartupAuthResult(callingActivity, startupAuthResultHandler, ex, null);
     }
 
     /**
-     * Starts an activity after the splash timeout.
+     * Invoke the completeHandler after the resume session timeout
+     * by running the Runnable on th UI thread. This method is 
+     * currently being called from a background thread.
      *
      * @param runnable runnable to run after the splash timeout expires.
      */
-    private void runAfterStartupAuthDelay(final Activity callingActivity, final Runnable runnable) {
+    private void runAfterStartupAuthDelay(final Activity callingActivity,
+                                          final Runnable runnable) {
         executorService.submit(new Runnable() {
             public void run() {
-                // Wait for the splash timeout expiry or for the user to tap.
+                // Wait for the startupAuthTimeoutLatch to go to zero.
                 try {
                     startupAuthTimeoutLatch.await();
                 } catch (InterruptedException e) {
                     Log.d(LOG_TAG, "Interrupted while waiting for startup auth minimum delay.");
                 }
 
+                // Notify user by invoking the callback on the UI thread
                 callingActivity.runOnUiThread(runnable);
             }
         });
     }
 
     /**
-     * This should be called from your app's splash activity upon start-up. If the user was previously
-     * signed in, this will attempt to refresh their identity using the previously sign-ed in provider.
+     * This should be called from your app's activity upon start-up. If the user was previously
+     * signed-in, this will attempt to refresh their identity using the previously signed-in provider.
      * If the user was not previously signed in or their identity could not be refreshed with the
-     * previously signed in provider and sign-in is optional, it will attempt to obtain an unauthenticated (guest)
-     * identity.
+     * previously signed-in provider, it will attempt to obtain an unauthenticated identity.
      *
      * @param callingActivity the calling activity.
      * @param startupAuthResultHandler a handler for returning results.
      * @param minimumDelay the minimum delay to wait before returning the sign-in result.
      */
-    public void doStartupAuth(final Activity callingActivity,
+    public void resumeSession(final Activity callingActivity,
                               final StartupAuthResultHandler startupAuthResultHandler,
                               final long minimumDelay) {
 
+        Log.d(LOG_TAG, "Resume Session called.");
+        
         executorService.submit(new Runnable() {
             public void run() {
-                Log.d(LOG_TAG, "Starting up authentication...");
-                final SignInManager signInManager = SignInManager.getInstance(
-                    callingActivity.getApplicationContext());
+                Log.d(LOG_TAG, "Looking for a previously signed-in session.");
+                final SignInManager signInManager = 
+                        SignInManager.getInstance(callingActivity.getApplicationContext());
+                
+                final SignInProvider signInProvider = 
+                        signInManager.getPreviouslySignedInProvider();
 
-                if (signInManager == null) {
-                    throw new IllegalStateException("You cannot pass null for identityManager.");
-                }
-
-                final SignInProvider provider = signInManager.getPreviouslySignedInProvider();
-
-                // if the user was already previously signed-in to a provider.
-                if (provider != null) {
-                    Log.d(LOG_TAG, "Refreshing credentials with identity provider " + provider.getDisplayName());
-                    // asynchronously handle refreshing credentials and call our handler.
+                // if the user was previously signed-in with an sign-in provider and
+                // we are able to verify with the sign-in provider.
+                if (signInProvider != null) {
+                    Log.d(LOG_TAG, "Refreshing credentials with sign-in provider "
+                        + signInProvider.getDisplayName());
+                    
+                    // Use the token from the previously signed-in session to
+                    // get a AWS Identity using Cognito Federated Identities
+                    // The AWS Identity will be wrapped into the CredentialsProvider
+                    // which will contain short-lived AWS Credentials to access
+                    // AWS resources.             
                     signInManager.refreshCredentialsWithProvider(callingActivity,
-                        provider, new SignInProviderResultHandler() {
+                            signInProvider,
+                            new SignInProviderResultHandler() {
 
-                            @Override
-                            public void onSuccess(final IdentityProvider provider) {
-                                // The sign-in manager is no longer needed once signed in.
-                                SignInManager.dispose();
-
-                                Log.d(LOG_TAG, "Successfully got credentials from identity provider '"
-                                    + provider.getDisplayName());
-
-                                runAfterStartupAuthDelay(callingActivity, new Runnable() {
-                                     @Override
-                                     public void run() {
-                                         startupAuthResultHandler.onComplete(new StartupAuthResult(IdentityManager.this, null));
-                                     }
-                                });
-                            }
-
-                            @Override
-                            public void onCancel(final IdentityProvider provider) {
-                                // Should never happen.
-                                Log.wtf(LOG_TAG, "Cancel can't happen when handling a previously signed-in user.");
-                            }
-
-                            @Override
-                            public void onError(final IdentityProvider provider, final Exception ex) {
-                                Log.e(LOG_TAG,
-                                    String.format("Cognito credentials refresh with %s provider failed. Error: %s",
-                                        provider.getDisplayName(), ex.getMessage()), ex);
-
-                                if (ex instanceof AuthException) {
-                                    handleUnauthenticated(callingActivity, startupAuthResultHandler,
-                                        (AuthException) ex);
-                                } else {
-                                    handleUnauthenticated(callingActivity, startupAuthResultHandler,
-                                        new AuthException(provider, ex));
+                                @Override
+                                public void onSuccess(final IdentityProvider provider) {
+                                    Log.d(LOG_TAG, "Successfully got AWS Credentials.");
+        
+                                    runAfterStartupAuthDelay(callingActivity, new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            startupAuthResultHandler.onComplete(new StartupAuthResult(IdentityManager.this, null));
+                                        }
+                                    });
                                 }
-                            }
-                        });
+        
+                                @Override
+                                public void onCancel(final IdentityProvider provider) {
+                                    Log.wtf(LOG_TAG, "Cancel can't happen when handling a previously signed-in user.");
+                                }
+        
+                                @Override
+                                public void onError(final IdentityProvider provider, final Exception ex) {
+                                    Log.e(LOG_TAG,
+                                            String.format("Federate with Cognito with %s Sign-in provider failed. Error: %s",
+                                                    provider.getDisplayName(), ex.getMessage()), ex);
+        
+                                    if (ex instanceof AuthException) {
+                                        completeHandler(callingActivity, startupAuthResultHandler,
+                                                (AuthException) ex);
+                                    } else {
+                                        completeHandler(callingActivity, startupAuthResultHandler,
+                                                new AuthException(provider, ex));
+                                    }
+                                }
+                            });
                 } else {
-                    handleUnauthenticated(callingActivity, startupAuthResultHandler, null);
+                    // No previously signed-in provider found. No session to resume.
+                    // Notify the user by executing the callback handler.
+                    completeHandler(callingActivity, startupAuthResultHandler, null);
                 }
 
                 if (minimumDelay > 0) {
-                    // Wait for the splash timeout.
+                    // Wait for the expiration timeout.
                     try {
                         Thread.sleep(minimumDelay);
                     } catch (final InterruptedException ex) {
-                        Log.i(LOG_TAG, "Interrupted while waiting for startup auth timeout.");
+                        Log.i(LOG_TAG, "Interrupted while waiting for resume session timeout.");
                     }
                 }
 
-                // Expire the splash page delay.
+                // Expire the resume session timeout.
                 startupAuthTimeoutLatch.countDown();
             }
         });
@@ -732,9 +765,44 @@ public class IdentityManager {
      * @param callingActivity the calling activity.
      * @param startupAuthResultHandler a handler for returning results.
      */
+    public void resumeSession(final Activity callingActivity,
+                              final StartupAuthResultHandler startupAuthResultHandler) {
+        resumeSession(callingActivity, startupAuthResultHandler, 0);
+    }
+
+    /**
+     * This should be called from your app's splash activity upon start-up. If the user was previously
+     * signed in, this will attempt to refresh their identity using the previously sign-ed in provider.
+     * If the user was not previously signed in or their identity could not be refreshed with the
+     * previously signed in provider and sign-in is optional, it will attempt to obtain an unauthenticated (guest)
+     * identity.
+     *
+     * @param callingActivity the calling activity.
+     * @param startupAuthResultHandler a handler for returning results.
+     * @deprecated Please use {@link #resumeSession(Activity, StartupAuthResultHandler)} method instead.
+     */
+    @Deprecated
     public void doStartupAuth(final Activity callingActivity,
                               final StartupAuthResultHandler startupAuthResultHandler) {
-        doStartupAuth(callingActivity, startupAuthResultHandler, 0);
+        resumeSession(callingActivity, startupAuthResultHandler, 0);
+    }
+
+    /**
+     * This should be called from your app's splash activity upon start-up. If the user was previously
+     * signed in, this will attempt to refresh their identity using the previously sign-ed in provider.
+     * If the user was not previously signed in or their identity could not be refreshed with the
+     * previously signed in provider and sign-in is optional, it will attempt to obtain an unauthenticated (guest)
+     * identity.
+     *
+     * @param callingActivity the calling activity.
+     * @param startupAuthResultHandler a handler for returning results.
+     * @deprecated Please use {@link #resumeSession(Activity, StartupAuthResultHandler, long)} method instead.
+     */
+    @Deprecated
+    public void doStartupAuth(final Activity callingActivity,
+                              final StartupAuthResultHandler startupAuthResultHandler,
+                              final long minimumDelay) {
+        resumeSession(callingActivity, startupAuthResultHandler, minimumDelay);
     }
 
     /**
@@ -751,18 +819,34 @@ public class IdentityManager {
      *
      * @param context context.
      * @param signInResultHandler the results handler.
+     * @deprecated Please use {@link #login(Context, SignInResultHandler)} method instead.
      */
+    @Deprecated
     public void setUpToAuthenticate(final Context context,
                                     final SignInResultHandler signInResultHandler) {
-        // Start the sign-in activity. We do not finish the calling activity allowing the user to navigate back.
-        final SignInManager signInManager = SignInManager.getInstance(
-            context.getApplicationContext());
-        signInManager.setResultHandler(signInResultHandler);
+        this.login(context, signInResultHandler);
     }
 
-    private void setCredentialsProvider(final Context context,
-                                        final CognitoCachingCredentialsProvider cachingCredentialsProvider) {
-        credentialsProviderHolder.setUnderlyingProvider(cachingCredentialsProvider);
+    /**
+     * Call login to initiate sign-in with a provider.
+     *
+     * Note: This should not be called when already signed in with a provider.
+     *
+     * @param context context.
+     * @param signInResultHandler the results handler.
+     */
+    public void login(final Context context,
+                      final SignInResultHandler signInResultHandler) {
+        // Start the sign-in activity. 
+        // We do not finish the calling activity allowing the user to navigate back.
+        try {
+            SignInManager
+                .getInstance(context.getApplicationContext())
+                .setResultHandler(signInResultHandler);
+        } catch (final Exception exception) {
+            Log.e(LOG_TAG, "Error in instantiating SignInManager. " +
+                           "Check the context and completion handler.", exception);
+        }
     }
 
     /**
@@ -771,23 +855,20 @@ public class IdentityManager {
      *   in order to refresh the credentials.  Therefore, currently cached credentials are
      *   only useful for unauthenticated users.
      */
-    private void initializeCognito(final Context context,
-                                   final ClientConfiguration clientConfiguration) {
+    private void createCredentialsProvider(final Context context,
+                                           final ClientConfiguration clientConfiguration) {
 
-        Log.d(LOG_TAG, "Initializing Cognito");
+        Log.d(LOG_TAG, "Creating the Cognito Caching Credentials Provider "
+                + "with a refreshing Cognito Identity Provider.");
 
         final String region = getCognitoIdentityRegion();
-        Regions cognitoIdentityRegion = Regions.fromName(region);
-        
-        setCredentialsProvider(context,
-            new CognitoCachingCredentialsProvider(context, getCognitoIdentityPoolId(),
-                cognitoIdentityRegion, clientConfiguration));
+        final Regions cognitoIdentityRegion = Regions.fromName(region);
 
         final AWSRefreshingCognitoIdentityProvider refreshingCredentialsProvider =
             new AWSRefreshingCognitoIdentityProvider(null, getCognitoIdentityPoolId(),
                 clientConfiguration, cognitoIdentityRegion);
 
-        setCredentialsProvider(context,
+        credentialsProviderHolder.setUnderlyingProvider(
             new CognitoCachingCredentialsProvider(context, refreshingCredentialsProvider,
                     cognitoIdentityRegion, clientConfiguration));
     }

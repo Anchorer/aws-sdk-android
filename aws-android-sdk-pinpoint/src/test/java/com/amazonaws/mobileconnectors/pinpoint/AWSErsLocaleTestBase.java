@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -51,15 +52,10 @@ public abstract class AWSErsLocaleTestBase
     protected static final String SDK_NAME = "AmazonAnalyticsSDK";
     protected static final String UNIQUE_ID = "BEEFBEEF-BEEF-BEEF-BEEF-BEEFBEEFBEEF";
     private static final Locale[] locales = new Locale[] {
-                                                                 new Locale("en",
-                                                                                   "US"),
-                                                                 new Locale("ar",
-                                                                                   "SA"),
-                                                                 new Locale("ja",
-                                                                                   "JP",
-                                                                                   "JP"),
-                                                                 new Locale("fr",
-                                                                                   "FR")
+                                                           new Locale("en", "US"),
+                                                           new Locale("ar", "SA"),
+                                                           new Locale("ja", "JP", "JP"),
+                                                           new Locale("fr", "FR")
     };
     @Rule
     public ApplyLocalesRule applyLocalesRule = new ApplyLocalesRule(locales);
@@ -96,7 +92,7 @@ public abstract class AWSErsLocaleTestBase
         context = new AnalyticsContextBuilder()
                           .withSdkInfo(SDK_NAME, SDK_VERSION)
                           .withUniqueIdValue(UNIQUE_ID)
-                          .withContext(Robolectric.application
+                          .withContext(RuntimeEnvironment.application
                                                .getApplicationContext())
                           .withSystem(new MockSystem("HELLO.world"))
                           .withConfiguration(mockConfiguration)

@@ -91,6 +91,20 @@ public class FacebookSignInProvider implements SignInProvider {
         }
         initializedLatch.countDown();
         Log.d(LOG_TAG, "Facebook SDK initialization completed");
+
+        // Read the awsconfiguration.json and apply the permissions.
+        try {
+            FacebookSignInProvider.setPermissions(
+                this.awsConfiguration
+                    .optJsonObject("FacebookSignIn")
+                    .getString("Permissions")
+                    .split(",")
+            );
+        } catch (final Exception exception) {
+                Log.e(LOG_TAG, "Failed to register the permissions with FacebookSignInProvider. "
+                    + "Use FacebookSignInProvider.setPermissions() to register the permissions. "
+                    + "Check if FacebookSignIn is present in `awsconfiguration.json`.");
+        }
     }
 
     /**
@@ -111,6 +125,15 @@ public class FacebookSignInProvider implements SignInProvider {
 
         Log.d(LOG_TAG, "Facebook Access Token is null or expired.");
         return null;
+    }
+
+    /**
+     * Check if the AWSConfiguration has the specified key.
+     * 
+     * @param configKey
+     */
+    private boolean configHasKey(final String configKey) {
+        return this.awsConfiguration.optJsonObject(configKey) != null;
     }
 
     /** {@inheritDoc} */
@@ -177,12 +200,13 @@ public class FacebookSignInProvider implements SignInProvider {
      *
      * Eg:
      *  FacebookSignInProvider.setPermissions("public_profile");
-     *  FacebookSignInProvider.setPermissions("publi_profile", "email");
+     *  FacebookSignInProvider.setPermissions("public_profile", "email");
      *
      * @param userPermissions The list of permissions required
      */
     public static void setPermissions(final String... userPermissions) {
         synchronized (FacebookSignInProvider.permissions) {
+            FacebookSignInProvider.permissions.clear();
             for (String permission : userPermissions) {
                 FacebookSignInProvider.permissions.add(permission);
             }

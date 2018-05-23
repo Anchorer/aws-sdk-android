@@ -120,6 +120,19 @@ public class GoogleSignInProvider implements SignInProvider, SignInPermissionsHa
         this.awsConfiguration = awsConfig;
         Log.d(LOG_TAG, "Initializing Google SDK...");
 
+        try {
+            GoogleSignInProvider.setPermissions(
+                this.awsConfiguration
+                    .optJsonObject("GoogleSignIn")
+                    .getString("Permissions")
+                    .split(",")
+            );
+        } catch (final Exception exception) {
+                Log.e(LOG_TAG, "Failed to register the permissions with GoogleSignInProvider. "
+                    + "Use GoogleSignInProvider.setPermissions() to register the permissions. "
+                    + "Check if GoogleSignIn is present in `awsconfiguration.json`.");
+        }
+
         GoogleSignInOptions.Builder builder = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN);
         synchronized (GoogleSignInProvider.loginScopeList) {
             for (String loginScope : loginScopeList) {
@@ -188,6 +201,7 @@ public class GoogleSignInProvider implements SignInProvider, SignInPermissionsHa
      */
     public static void setPermissions(final String... loginScopes) {
         synchronized (GoogleSignInProvider.loginScopeList) {
+            GoogleSignInProvider.loginScopeList.clear();
             for (String scope : loginScopes) {
                 GoogleSignInProvider.loginScopeList.add(scope);
             }

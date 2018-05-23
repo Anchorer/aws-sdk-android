@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.amazonaws.mobile.auth.core.signin.ui.BackgroundDrawable;
 import com.amazonaws.mobile.auth.core.signin.ui.SplitBackgroundDrawable;
 import com.amazonaws.mobile.auth.core.signin.ui.buttons.SignInButton;
 
@@ -56,7 +58,7 @@ public class SignInView extends LinearLayout {
     private static final int IMAGE_LAYOUT_MARGINS = dp(10);
 
     /** String that represents the SDK Version. */
-    private static final String SDK_VERSION = "2.6.6";
+    private static final String SDK_VERSION = "2.6.19";
 
     /** Common Prefix of the namespaces of different SignIn providers. */
     private static final String NAMESPACE_COMMON_PREFIX = "com.amazonaws.mobile.auth";
@@ -76,7 +78,7 @@ public class SignInView extends LinearLayout {
             + SDK_VERSION;
 
     /** Dependency name for Facebook Button class. */
-    private static final String FACEBOOK_BUTTON = NAMESPACE_COMMON_PREFIX + ".facebook.buttons.FacebookButton";
+    private static final String FACEBOOK_BUTTON = NAMESPACE_COMMON_PREFIX + ".facebook.FacebookButton";
 
     /** Dependency name for Facebook SignIn package. */
     private static final String FACEBOOK_SIGN_IN_IMPORT = AWS_MOBILE_AUTH_GROUP_NAME
@@ -84,7 +86,7 @@ public class SignInView extends LinearLayout {
             + SDK_VERSION;
 
     /** Dependency name for Google Button class. */
-    private static final String GOOGLE_BUTTON = NAMESPACE_COMMON_PREFIX + ".google.buttons.GoogleButton";
+    private static final String GOOGLE_BUTTON = NAMESPACE_COMMON_PREFIX + ".google.GoogleButton";
 
     /** Dependency name for Google SignIn package. */
     private static final String GOOGLE_SIGN_IN_IMPORT =  AWS_MOBILE_AUTH_GROUP_NAME
@@ -93,9 +95,6 @@ public class SignInView extends LinearLayout {
 
     /** Package Name for AuthUI. */
     private static final String PACKAGE_NAME = "com.amazonaws.mobile.auth.ui";
-
-    /** SignIn Background Color Key. **/
-    public static final String BACKGROUND_COLOR_KEY = "signInBackgroundColor";
 
     /** Configuration Key to store AuthUIConfiguration objects. */
     public static final String CONFIGURATION_KEY = "com.amazonaws.mobile.auth.ui.configurationkey";
@@ -111,9 +110,6 @@ public class SignInView extends LinearLayout {
 
     /** Divider in the SignIn screen. */
     private View divider;
-
-    /** Reference to the SplitBackgroundDrawable. */
-    private SplitBackgroundDrawable splitBackgroundDrawable;
 
     /** Margins for the SignIn Button. */
     private int signInButtonMargin;
@@ -138,6 +134,12 @@ public class SignInView extends LinearLayout {
 
     /** Background Color. */
     private int backgroundColor;
+
+    /** Draw background color the whole screen. */
+    private BackgroundDrawable backgroundDrawable;
+
+    /** Draw background color from the top position to the middle. */
+    private SplitBackgroundDrawable splitBackgroundDrawable;
 
     /**
      * Consructor.
@@ -188,13 +190,19 @@ public class SignInView extends LinearLayout {
     /**
      * Sets up the Splitter and background drawable.
      */
-    private void setUpSplitBackgroundDrawable() {
+    private void setUpBackgroundDrawable() {
+        backgroundDrawable = new BackgroundDrawable(backgroundColor);
         if (this.config != null && this.config.getSignInUserPoolsEnabled()) {
             splitBackgroundDrawable = new SplitBackgroundDrawable(0, backgroundColor);
         } else {
             splitBackgroundDrawable = new SplitBackgroundDrawable(0);
         }
-        setBackgroundDrawable(splitBackgroundDrawable);
+
+        if (this.config != null && this.config.isBackgroundColorFullScreen()) {
+            setBackgroundDrawable(backgroundDrawable);
+        } else {
+            setBackgroundDrawable(splitBackgroundDrawable);
+        }
     }
 
     /**
@@ -302,7 +310,7 @@ public class SignInView extends LinearLayout {
         this.config = getConfiguration(context);
 
         this.setUpLogoAndBackgroundColor();
-        this.setUpSplitBackgroundDrawable();
+        this.setUpBackgroundDrawable();
         this.setUpImageView(context);
         this.setUpUserPools(context);
         this.setUpDivider(context);
@@ -470,30 +478,10 @@ public class SignInView extends LinearLayout {
     private AuthUIConfiguration getConfiguration(final Context context) {
         try {
             Intent intent = ((Activity) context).getIntent();
-            String uuid = (String)(intent.getSerializableExtra(CONFIGURATION_KEY));
-            AuthUIConfiguration configuration = SignInActivity.configurationStore.get(uuid);
-            purgeConfigurationStoreEntry(uuid);
-            return configuration;
+            return (AuthUIConfiguration)(intent.getSerializableExtra(CONFIGURATION_KEY));
         } catch (Exception exception) {
-            exception.printStackTrace();
-            Log.e(LOG_TAG, "Intent is null. Cannot read the configuration from the intent.");
+            Log.e(LOG_TAG, "Intent is null. Cannot read the configuration from the intent.", exception);
             return null;
-        }
-    }
-
-    /** 
-     * Remove the UUID, AuthUIConfiguration entry from the configuration store. 
-     * @param uuid The UUID for which the entry should be removed.
-     */
-    private void purgeConfigurationStoreEntry(final String uuid) {
-        try {
-            synchronized (SignInActivity.configurationStore) {
-                SignInActivity.configurationStore.remove(uuid);
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            Log.e(LOG_TAG, "Cannot purge the entry from the configuration store.");
-            return;
         }
     }
 
@@ -505,6 +493,11 @@ public class SignInView extends LinearLayout {
         try {
             if (this.config != null) {
                 ArrayList<Class<? extends SignInButton>> signInButtons = this.config.getSignInButtons();
+                if (signInButtons == null) {
+                    Log.d(LOG_TAG, "Skipping creating the SignInButtons. No SignInbuttons were added to the view.");
+                    return;
+                }
+
                 for (Class<? extends SignInButton> signInButton : signInButtons) {
                     SignInButton buttonObject = (SignInButton) createDependencyObject(signInButton.getName(),
                             context, signInButton.getCanonicalName());
@@ -520,11 +513,11 @@ public class SignInView extends LinearLayout {
                       }
                 }
             } else {
-                Log.d(LOG_TAG, "Configuration is Null. There are no buttons to add to the view");
+                Log.d(LOG_TAG, "AuthUIConfiguration is not configured with any SignInButtons. "
+                                + "There are no buttons to add to the view");
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
-            Log.e(LOG_TAG, "Cannot access the configuration or error in adding the signin button to the view");
+            Log.e(LOG_TAG, "Cannot access the configuration or error in adding the signin button to the view", exception);
             return;
         }
     }
