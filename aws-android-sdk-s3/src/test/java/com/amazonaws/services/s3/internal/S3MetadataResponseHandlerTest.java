@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.amazonaws.http.HttpResponse;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.S3ResponseMetadata;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.StorageClass;
 
 import org.junit.Test;
 
@@ -43,6 +44,7 @@ public class S3MetadataResponseHandlerTest {
                 .header(Headers.RESTORE,
                         "ongoing-request=\"false\", expiry-date=\"Wed, 07 Nov 2012 00:00:00 GMT\"")
                 .header("UndefinedKey", "UndefinedValue")
+                .header(Headers.STORAGE_CLASS, "STANDARD_IA")
                 .build();
 
         S3MetadataResponseHandler handler = new S3MetadataResponseHandler();
@@ -63,6 +65,7 @@ public class S3MetadataResponseHandlerTest {
         assertEquals("Rule for testfile.txt", om.getExpirationTimeRuleId());
         assertEquals(1352246400000L, om.getRestoreExpirationTime().getTime());
         assertFalse(om.getOngoingRestore());
+        assertEquals(om.getStorageClass(), StorageClass.StandardInfrequentAccess.toString());
     }
 
 }

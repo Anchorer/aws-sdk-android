@@ -55,9 +55,6 @@ class BaiduMessageJsonUnmarshaller implements Unmarshaller<BaiduMessage, JsonUnm
             } else if (name.equals("ImageUrl")) {
                 baiduMessage.setImageUrl(StringJsonUnmarshaller.getInstance()
                         .unmarshall(context));
-            } else if (name.equals("JsonData")) {
-                baiduMessage.setJsonData(StringJsonUnmarshaller.getInstance()
-                        .unmarshall(context));
             } else if (name.equals("RawContent")) {
                 baiduMessage.setRawContent(StringJsonUnmarshaller.getInstance()
                         .unmarshall(context));
@@ -76,6 +73,9 @@ class BaiduMessageJsonUnmarshaller implements Unmarshaller<BaiduMessage, JsonUnm
                         )
                         )
                                 .unmarshall(context));
+            } else if (name.equals("TimeToLive")) {
+                baiduMessage.setTimeToLive(IntegerJsonUnmarshaller.getInstance()
+                        .unmarshall(context));
             } else if (name.equals("Title")) {
                 baiduMessage.setTitle(StringJsonUnmarshaller.getInstance()
                         .unmarshall(context));

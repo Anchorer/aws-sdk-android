@@ -1,5 +1,108 @@
 # Change Log - AWS SDK for Android
 
+## [Release 2.6.26](https://github.com/aws/aws-sdk-android/releases/tag/release_v2.6.26)
+
+### Enhancements
+
+* **Amazon Polly**
+  * Added support for new `SynthesisTask` feature which allows asynchronous and batch processing.
+
+### Misc. Updates
+
+* Model updates for the following services
+  * Amazon Comprehend
+  * Amazon DynamoDB
+  * AWS IoT
+  * Amazon Pinpoint
+  * Amazon Polly
+  * Amazon Rekognition
+  * Amazon Transcribe
+
+## [Release 2.6.25](https://github.com/aws/aws-sdk-android/releases/tag/release_v2.6.25)
+
+## New Features
+
+* **Amazon Kinesis Video Streams**
+  * Updated models for HLS streaming feature. Add `AWSKinesisVideoArchivedMediaClient`and dependency `implementation 'com.amazonaws:aws-android-sdk-kinesisvideo-archivedmedia:2.6.25'` to access HLS streaming feature.
+
+## [Release 2.6.24](https://github.com/aws/aws-sdk-android/releases/tag/release_v2.6.24)
+
+### Bug Fixes
+
+* **Amazon Cognito Identity Provider**
+  * Fix bug that prevents authentication with the username and password flow. See (issue #484)[https://github.com/aws/aws-sdk-android/issues/484]
+
+## [Release 2.6.23](https://github.com/aws/aws-sdk-android/releases/tag/release_v2.6.23)
+
+### Enhancements
+
+* **Amazon S3**
+  * Support user metadata headers.
+
+## [Release 2.6.22](https://github.com/aws/aws-sdk-android/releases/tag/release_v2.6.22)
+
+### Enhancements
+
+- **Amazon Polly**
+  - Added support for new voice - `Lea`.
+
+## [Release 2.6.21](https://github.com/aws/aws-sdk-android/releases/tag/release_v2.6.21)
+
+### Enhancements
+
+* **Amazon Kinesis Streams** and **Amazon Kinesis Firehose**
+  * Added `DeadLetterListener` to allow for records that cannot be retried or exceeded the retry limit to be handled.
+  * Added one automatic retry for unmarshall errors when submitting all records.
+
+### Misc. Updates
+
+* Model updates for the following services
+  * Amazon Auto Scaling
+  * Amazon Cognito Identity
+  * Amazon Cognito Identity Provider
+  * Amazon Cognito Sync
+  * Amazon DynamoDB
+  * Amazon Elastic Load Balancing (ELB)
+  * Amazon Kinesis Firehose
+  * Amazon Kinesis Streams
+  * Amazon Kinesis Video Streams
+  * Amazon Lex
+  * Amazon Machine Learning
+  * Amazon Pinpoint
+  * Amazon Polly
+  * Amazon Rekoginiton
+  * Amazon Security Token Service (STS)
+  * Amazon Simple Email Service (SES)
+  * AWS IoT
+  * AWS Key Management Service (KMS)
+  * AWS Lambda
+
+## [Release 2.6.20](https://github.com/aws/aws-sdk-android/releases/tag/release_v2.6.20)
+
+### New Features
+
+ * **Amazon Comprehend**
+  * Amazon Comprehend is a natural language processing (NLP) service that uses machine learning to find insights and relationships in text.
+
+* **Amazon Translate**
+  * Amazon Translate is a neural machine translation service that delivers fast, high-quality, and affordable language translation.
+
+### Misc. Updates
+
+* **Amazon CloudWatch Logs**
+  * Update Amazon CloudWatch Logs client to the latest service model.
+
+* **Amazon Cognito Identity**
+  * Update Amazon Cognito Identity client to the latest service model.
+
+* **Amazon Lex**
+  * Update Amazon Lex client to the latest service model.
+
+### Bug Fixes
+
+* **Amazon S3**
+  * Support Storage Class in `TransferUtility`. See [pr #398](https://github.com/aws/aws-sdk-android/pull/398/)
+
 ## [Release 2.6.19](https://github.com/aws/aws-sdk-android/releases/tag/release_v2.6.19)
 
 ### New Features

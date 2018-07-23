@@ -42,6 +42,11 @@ public class EmailChannelResponse implements Serializable {
     private String fromAddress;
 
     /**
+     * Not used. Retained for backwards compatibility.
+     */
+    private Boolean hasCredential;
+
+    /**
      * Channel ID. Not used, only for backwards compatibility.
      */
     private String id;
@@ -65,6 +70,11 @@ public class EmailChannelResponse implements Serializable {
      * Last date this was updated
      */
     private String lastModifiedDate;
+
+    /**
+     * Messages per second that can be sent
+     */
+    private Integer messagesPerSecond;
 
     /**
      * Platform type. Will be "EMAIL"
@@ -225,6 +235,48 @@ public class EmailChannelResponse implements Serializable {
      */
     public EmailChannelResponse withFromAddress(String fromAddress) {
         this.fromAddress = fromAddress;
+        return this;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @return Not used. Retained for backwards compatibility.
+     */
+    public Boolean isHasCredential() {
+        return hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @return Not used. Retained for backwards compatibility.
+     */
+    public Boolean getHasCredential() {
+        return hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @param hasCredential Not used. Retained for backwards compatibility.
+     */
+    public void setHasCredential(Boolean hasCredential) {
+        this.hasCredential = hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param hasCredential Not used. Retained for backwards compatibility.
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public EmailChannelResponse withHasCredential(Boolean hasCredential) {
+        this.hasCredential = hasCredential;
         return this;
     }
 
@@ -403,6 +455,39 @@ public class EmailChannelResponse implements Serializable {
     }
 
     /**
+     * Messages per second that can be sent
+     *
+     * @return Messages per second that can be sent
+     */
+    public Integer getMessagesPerSecond() {
+        return messagesPerSecond;
+    }
+
+    /**
+     * Messages per second that can be sent
+     *
+     * @param messagesPerSecond Messages per second that can be sent
+     */
+    public void setMessagesPerSecond(Integer messagesPerSecond) {
+        this.messagesPerSecond = messagesPerSecond;
+    }
+
+    /**
+     * Messages per second that can be sent
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param messagesPerSecond Messages per second that can be sent
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public EmailChannelResponse withMessagesPerSecond(Integer messagesPerSecond) {
+        this.messagesPerSecond = messagesPerSecond;
+        return this;
+    }
+
+    /**
      * Platform type. Will be "EMAIL"
      *
      * @return Platform type. Will be "EMAIL"
@@ -526,6 +611,8 @@ public class EmailChannelResponse implements Serializable {
             sb.append("Enabled: " + getEnabled() + ",");
         if (getFromAddress() != null)
             sb.append("FromAddress: " + getFromAddress() + ",");
+        if (getHasCredential() != null)
+            sb.append("HasCredential: " + getHasCredential() + ",");
         if (getId() != null)
             sb.append("Id: " + getId() + ",");
         if (getIdentity() != null)
@@ -536,6 +623,8 @@ public class EmailChannelResponse implements Serializable {
             sb.append("LastModifiedBy: " + getLastModifiedBy() + ",");
         if (getLastModifiedDate() != null)
             sb.append("LastModifiedDate: " + getLastModifiedDate() + ",");
+        if (getMessagesPerSecond() != null)
+            sb.append("MessagesPerSecond: " + getMessagesPerSecond() + ",");
         if (getPlatform() != null)
             sb.append("Platform: " + getPlatform() + ",");
         if (getRoleArn() != null)
@@ -558,6 +647,8 @@ public class EmailChannelResponse implements Serializable {
         hashCode = prime * hashCode + ((getEnabled() == null) ? 0 : getEnabled().hashCode());
         hashCode = prime * hashCode
                 + ((getFromAddress() == null) ? 0 : getFromAddress().hashCode());
+        hashCode = prime * hashCode
+                + ((getHasCredential() == null) ? 0 : getHasCredential().hashCode());
         hashCode = prime * hashCode + ((getId() == null) ? 0 : getId().hashCode());
         hashCode = prime * hashCode + ((getIdentity() == null) ? 0 : getIdentity().hashCode());
         hashCode = prime * hashCode + ((getIsArchived() == null) ? 0 : getIsArchived().hashCode());
@@ -565,6 +656,8 @@ public class EmailChannelResponse implements Serializable {
                 + ((getLastModifiedBy() == null) ? 0 : getLastModifiedBy().hashCode());
         hashCode = prime * hashCode
                 + ((getLastModifiedDate() == null) ? 0 : getLastModifiedDate().hashCode());
+        hashCode = prime * hashCode
+                + ((getMessagesPerSecond() == null) ? 0 : getMessagesPerSecond().hashCode());
         hashCode = prime * hashCode + ((getPlatform() == null) ? 0 : getPlatform().hashCode());
         hashCode = prime * hashCode + ((getRoleArn() == null) ? 0 : getRoleArn().hashCode());
         hashCode = prime * hashCode + ((getVersion() == null) ? 0 : getVersion().hashCode());
@@ -601,6 +694,11 @@ public class EmailChannelResponse implements Serializable {
         if (other.getFromAddress() != null
                 && other.getFromAddress().equals(this.getFromAddress()) == false)
             return false;
+        if (other.getHasCredential() == null ^ this.getHasCredential() == null)
+            return false;
+        if (other.getHasCredential() != null
+                && other.getHasCredential().equals(this.getHasCredential()) == false)
+            return false;
         if (other.getId() == null ^ this.getId() == null)
             return false;
         if (other.getId() != null && other.getId().equals(this.getId()) == false)
@@ -623,6 +721,11 @@ public class EmailChannelResponse implements Serializable {
             return false;
         if (other.getLastModifiedDate() != null
                 && other.getLastModifiedDate().equals(this.getLastModifiedDate()) == false)
+            return false;
+        if (other.getMessagesPerSecond() == null ^ this.getMessagesPerSecond() == null)
+            return false;
+        if (other.getMessagesPerSecond() != null
+                && other.getMessagesPerSecond().equals(this.getMessagesPerSecond()) == false)
             return false;
         if (other.getPlatform() == null ^ this.getPlatform() == null)
             return false;

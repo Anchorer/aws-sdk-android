@@ -21,18 +21,19 @@ import com.amazonaws.AmazonWebServiceRequest;
 
 /**
  * <p>
- * Gets face detection results for a Rekognition Video analysis started by .
+ * Gets face detection results for a Amazon Rekognition Video analysis started
+ * by .
  * </p>
  * <p>
- * Face detection with Rekognition Video is an asynchronous operation. You start
- * face detection by calling which returns a job identifier (<code>JobId</code>
- * ). When the face detection operation finishes, Rekognition Video publishes a
- * completion status to the Amazon Simple Notification Service topic registered
- * in the initial call to <code>StartFaceDetection</code>. To get the results of
- * the face detection operation, first check that the status value published to
- * the Amazon SNS topic is <code>SUCCEEDED</code>. If so, call and pass the job
- * identifier (<code>JobId</code>) from the initial call to
- * <code>StartFaceDetection</code>.
+ * Face detection with Amazon Rekognition Video is an asynchronous operation.
+ * You start face detection by calling which returns a job identifier (
+ * <code>JobId</code>). When the face detection operation finishes, Amazon
+ * Rekognition Video publishes a completion status to the Amazon Simple
+ * Notification Service topic registered in the initial call to
+ * <code>StartFaceDetection</code>. To get the results of the face detection
+ * operation, first check that the status value published to the Amazon SNS
+ * topic is <code>SUCCEEDED</code>. If so, call and pass the job identifier (
+ * <code>JobId</code>) from the initial call to <code>StartFaceDetection</code>.
  * </p>
  * <p>
  * <code>GetFaceDetection</code> returns an array of detected faces (
@@ -63,7 +64,9 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
 
     /**
      * <p>
-     * Maximum number of detected faces to return. The default is 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -74,8 +77,9 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
     /**
      * <p>
      * If the previous response was incomplete (because there are more faces to
-     * retrieve), Rekognition Video returns a pagination token in the response.
-     * You can use this pagination token to retrieve the next set of faces.
+     * retrieve), Amazon Rekognition Video returns a pagination token in the
+     * response. You can use this pagination token to retrieve the next set of
+     * faces.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -151,14 +155,19 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
 
     /**
      * <p>
-     * Maximum number of detected faces to return. The default is 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Range: </b>1 - <br/>
      *
      * @return <p>
-     *         Maximum number of detected faces to return. The default is 1000.
+     *         Maximum number of results to return per paginated call. The
+     *         largest value you can specify is 1000. If you specify a value
+     *         greater than 1000, a maximum of 1000 results is returned. The
+     *         default value is 1000.
      *         </p>
      */
     public Integer getMaxResults() {
@@ -167,15 +176,19 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
 
     /**
      * <p>
-     * Maximum number of detected faces to return. The default is 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Range: </b>1 - <br/>
      *
      * @param maxResults <p>
-     *            Maximum number of detected faces to return. The default is
-     *            1000.
+     *            Maximum number of results to return per paginated call. The
+     *            largest value you can specify is 1000. If you specify a value
+     *            greater than 1000, a maximum of 1000 results is returned. The
+     *            default value is 1000.
      *            </p>
      */
     public void setMaxResults(Integer maxResults) {
@@ -184,7 +197,9 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
 
     /**
      * <p>
-     * Maximum number of detected faces to return. The default is 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * Returns a reference to this object so that method calls can be chained
@@ -194,8 +209,10 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
      * <b>Range: </b>1 - <br/>
      *
      * @param maxResults <p>
-     *            Maximum number of detected faces to return. The default is
-     *            1000.
+     *            Maximum number of results to return per paginated call. The
+     *            largest value you can specify is 1000. If you specify a value
+     *            greater than 1000, a maximum of 1000 results is returned. The
+     *            default value is 1000.
      *            </p>
      * @return A reference to this updated object so that method calls can be
      *         chained together.
@@ -208,8 +225,9 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
     /**
      * <p>
      * If the previous response was incomplete (because there are more faces to
-     * retrieve), Rekognition Video returns a pagination token in the response.
-     * You can use this pagination token to retrieve the next set of faces.
+     * retrieve), Amazon Rekognition Video returns a pagination token in the
+     * response. You can use this pagination token to retrieve the next set of
+     * faces.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -217,9 +235,9 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
      *
      * @return <p>
      *         If the previous response was incomplete (because there are more
-     *         faces to retrieve), Rekognition Video returns a pagination token
-     *         in the response. You can use this pagination token to retrieve
-     *         the next set of faces.
+     *         faces to retrieve), Amazon Rekognition Video returns a pagination
+     *         token in the response. You can use this pagination token to
+     *         retrieve the next set of faces.
      *         </p>
      */
     public String getNextToken() {
@@ -229,8 +247,9 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
     /**
      * <p>
      * If the previous response was incomplete (because there are more faces to
-     * retrieve), Rekognition Video returns a pagination token in the response.
-     * You can use this pagination token to retrieve the next set of faces.
+     * retrieve), Amazon Rekognition Video returns a pagination token in the
+     * response. You can use this pagination token to retrieve the next set of
+     * faces.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -238,7 +257,7 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
      *
      * @param nextToken <p>
      *            If the previous response was incomplete (because there are
-     *            more faces to retrieve), Rekognition Video returns a
+     *            more faces to retrieve), Amazon Rekognition Video returns a
      *            pagination token in the response. You can use this pagination
      *            token to retrieve the next set of faces.
      *            </p>
@@ -250,8 +269,9 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
     /**
      * <p>
      * If the previous response was incomplete (because there are more faces to
-     * retrieve), Rekognition Video returns a pagination token in the response.
-     * You can use this pagination token to retrieve the next set of faces.
+     * retrieve), Amazon Rekognition Video returns a pagination token in the
+     * response. You can use this pagination token to retrieve the next set of
+     * faces.
      * </p>
      * <p>
      * Returns a reference to this object so that method calls can be chained
@@ -262,7 +282,7 @@ public class GetFaceDetectionRequest extends AmazonWebServiceRequest implements 
      *
      * @param nextToken <p>
      *            If the previous response was incomplete (because there are
-     *            more faces to retrieve), Rekognition Video returns a
+     *            more faces to retrieve), Amazon Rekognition Video returns a
      *            pagination token in the response. You can use this pagination
      *            token to retrieve the next set of faces.
      *            </p>

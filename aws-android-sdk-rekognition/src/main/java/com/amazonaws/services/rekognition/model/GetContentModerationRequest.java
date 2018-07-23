@@ -21,20 +21,24 @@ import com.amazonaws.AmazonWebServiceRequest;
 
 /**
  * <p>
- * Gets the content moderation analysis results for a Rekognition Video analysis
- * started by .
+ * Gets the content moderation analysis results for a Amazon Rekognition Video
+ * analysis started by .
  * </p>
  * <p>
  * Content moderation analysis of a video is an asynchronous operation. You
  * start analysis by calling . which returns a job identifier (
- * <code>JobId</code>). When analysis finishes, Rekognition Video publishes a
- * completion status to the Amazon Simple Notification Service topic registered
- * in the initial call to <code>StartContentModeration</code>. To get the
- * results of the content moderation analysis, first check that the status value
- * published to the Amazon SNS topic is <code>SUCCEEDED</code>. If so, call
- * <code>GetCelebrityDetection</code> and pass the job identifier (
+ * <code>JobId</code>). When analysis finishes, Amazon Rekognition Video
+ * publishes a completion status to the Amazon Simple Notification Service topic
+ * registered in the initial call to <code>StartContentModeration</code>. To get
+ * the results of the content moderation analysis, first check that the status
+ * value published to the Amazon SNS topic is <code>SUCCEEDED</code>. If so,
+ * call <code>GetCelebrityDetection</code> and pass the job identifier (
  * <code>JobId</code>) from the initial call to
- * <code>StartCelebrityDetection</code>. For more information, see <a>video</a>.
+ * <code>StartCelebrityDetection</code>.
+ * </p>
+ * <p>
+ * For more information, see Working with Stored Videos in the Amazon
+ * Rekognition Devlopers Guide.
  * </p>
  * <p>
  * <code>GetContentModeration</code> returns detected content moderation labels,
@@ -58,7 +62,8 @@ import com.amazonaws.AmazonWebServiceRequest;
  * previous call to <code>GetContentModeration</code>.
  * </p>
  * <p>
- * For more information, see <a>moderation</a>.
+ * For more information, see Detecting Unsafe Content in the Amazon Rekognition
+ * Developer Guide.
  * </p>
  */
 public class GetContentModerationRequest extends AmazonWebServiceRequest implements Serializable {
@@ -77,8 +82,9 @@ public class GetContentModerationRequest extends AmazonWebServiceRequest impleme
 
     /**
      * <p>
-     * Maximum number of content moderation labels to return. The default is
-     * 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -185,16 +191,19 @@ public class GetContentModerationRequest extends AmazonWebServiceRequest impleme
 
     /**
      * <p>
-     * Maximum number of content moderation labels to return. The default is
-     * 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Range: </b>1 - <br/>
      *
      * @return <p>
-     *         Maximum number of content moderation labels to return. The
-     *         default is 1000.
+     *         Maximum number of results to return per paginated call. The
+     *         largest value you can specify is 1000. If you specify a value
+     *         greater than 1000, a maximum of 1000 results is returned. The
+     *         default value is 1000.
      *         </p>
      */
     public Integer getMaxResults() {
@@ -203,16 +212,19 @@ public class GetContentModerationRequest extends AmazonWebServiceRequest impleme
 
     /**
      * <p>
-     * Maximum number of content moderation labels to return. The default is
-     * 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Range: </b>1 - <br/>
      *
      * @param maxResults <p>
-     *            Maximum number of content moderation labels to return. The
-     *            default is 1000.
+     *            Maximum number of results to return per paginated call. The
+     *            largest value you can specify is 1000. If you specify a value
+     *            greater than 1000, a maximum of 1000 results is returned. The
+     *            default value is 1000.
      *            </p>
      */
     public void setMaxResults(Integer maxResults) {
@@ -221,8 +233,9 @@ public class GetContentModerationRequest extends AmazonWebServiceRequest impleme
 
     /**
      * <p>
-     * Maximum number of content moderation labels to return. The default is
-     * 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * Returns a reference to this object so that method calls can be chained
@@ -232,8 +245,10 @@ public class GetContentModerationRequest extends AmazonWebServiceRequest impleme
      * <b>Range: </b>1 - <br/>
      *
      * @param maxResults <p>
-     *            Maximum number of content moderation labels to return. The
-     *            default is 1000.
+     *            Maximum number of results to return per paginated call. The
+     *            largest value you can specify is 1000. If you specify a value
+     *            greater than 1000, a maximum of 1000 results is returned. The
+     *            default value is 1000.
      *            </p>
      * @return A reference to this updated object so that method calls can be
      *         chained together.

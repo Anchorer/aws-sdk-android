@@ -22,9 +22,15 @@ import java.io.Serializable;
  */
 public class SMSMessage implements Serializable {
     /**
-     * The message body of the notification, the email body or the text message.
+     * The body of the SMS message.
      */
     private String body;
+
+    /**
+     * The SMS program name that you provided to AWS Support when you requested
+     * your dedicated number.
+     */
+    private String keyword;
 
     /**
      * Is this a transaction priority message or lower priority.
@@ -35,7 +41,16 @@ public class SMSMessage implements Serializable {
     private String messageType;
 
     /**
-     * Sender ID of sent message.
+     * The phone number that the SMS message originates from. Specify one of the
+     * dedicated long codes or short codes that you requested from AWS Support
+     * and that is assigned to your account. If this attribute is not specified,
+     * Amazon Pinpoint randomly assigns a long code.
+     */
+    private String originationNumber;
+
+    /**
+     * The sender ID that is shown as the message sender on the recipient's
+     * device. Support for sender IDs varies by country or region.
      */
     private String senderId;
 
@@ -46,38 +61,74 @@ public class SMSMessage implements Serializable {
     private java.util.Map<String, java.util.List<String>> substitutions;
 
     /**
-     * The message body of the notification, the email body or the text message.
+     * The body of the SMS message.
      *
-     * @return The message body of the notification, the email body or the text
-     *         message.
+     * @return The body of the SMS message.
      */
     public String getBody() {
         return body;
     }
 
     /**
-     * The message body of the notification, the email body or the text message.
+     * The body of the SMS message.
      *
-     * @param body The message body of the notification, the email body or the
-     *            text message.
+     * @param body The body of the SMS message.
      */
     public void setBody(String body) {
         this.body = body;
     }
 
     /**
-     * The message body of the notification, the email body or the text message.
+     * The body of the SMS message.
      * <p>
      * Returns a reference to this object so that method calls can be chained
      * together.
      *
-     * @param body The message body of the notification, the email body or the
-     *            text message.
+     * @param body The body of the SMS message.
      * @return A reference to this updated object so that method calls can be
      *         chained together.
      */
     public SMSMessage withBody(String body) {
         this.body = body;
+        return this;
+    }
+
+    /**
+     * The SMS program name that you provided to AWS Support when you requested
+     * your dedicated number.
+     *
+     * @return The SMS program name that you provided to AWS Support when you
+     *         requested your dedicated number.
+     */
+    public String getKeyword() {
+        return keyword;
+    }
+
+    /**
+     * The SMS program name that you provided to AWS Support when you requested
+     * your dedicated number.
+     *
+     * @param keyword The SMS program name that you provided to AWS Support when
+     *            you requested your dedicated number.
+     */
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    /**
+     * The SMS program name that you provided to AWS Support when you requested
+     * your dedicated number.
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param keyword The SMS program name that you provided to AWS Support when
+     *            you requested your dedicated number.
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public SMSMessage withKeyword(String keyword) {
+        this.keyword = keyword;
         return this;
     }
 
@@ -163,30 +214,93 @@ public class SMSMessage implements Serializable {
     }
 
     /**
-     * Sender ID of sent message.
+     * The phone number that the SMS message originates from. Specify one of the
+     * dedicated long codes or short codes that you requested from AWS Support
+     * and that is assigned to your account. If this attribute is not specified,
+     * Amazon Pinpoint randomly assigns a long code.
      *
-     * @return Sender ID of sent message.
+     * @return The phone number that the SMS message originates from. Specify
+     *         one of the dedicated long codes or short codes that you requested
+     *         from AWS Support and that is assigned to your account. If this
+     *         attribute is not specified, Amazon Pinpoint randomly assigns a
+     *         long code.
+     */
+    public String getOriginationNumber() {
+        return originationNumber;
+    }
+
+    /**
+     * The phone number that the SMS message originates from. Specify one of the
+     * dedicated long codes or short codes that you requested from AWS Support
+     * and that is assigned to your account. If this attribute is not specified,
+     * Amazon Pinpoint randomly assigns a long code.
+     *
+     * @param originationNumber The phone number that the SMS message originates
+     *            from. Specify one of the dedicated long codes or short codes
+     *            that you requested from AWS Support and that is assigned to
+     *            your account. If this attribute is not specified, Amazon
+     *            Pinpoint randomly assigns a long code.
+     */
+    public void setOriginationNumber(String originationNumber) {
+        this.originationNumber = originationNumber;
+    }
+
+    /**
+     * The phone number that the SMS message originates from. Specify one of the
+     * dedicated long codes or short codes that you requested from AWS Support
+     * and that is assigned to your account. If this attribute is not specified,
+     * Amazon Pinpoint randomly assigns a long code.
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param originationNumber The phone number that the SMS message originates
+     *            from. Specify one of the dedicated long codes or short codes
+     *            that you requested from AWS Support and that is assigned to
+     *            your account. If this attribute is not specified, Amazon
+     *            Pinpoint randomly assigns a long code.
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public SMSMessage withOriginationNumber(String originationNumber) {
+        this.originationNumber = originationNumber;
+        return this;
+    }
+
+    /**
+     * The sender ID that is shown as the message sender on the recipient's
+     * device. Support for sender IDs varies by country or region.
+     *
+     * @return The sender ID that is shown as the message sender on the
+     *         recipient's device. Support for sender IDs varies by country or
+     *         region.
      */
     public String getSenderId() {
         return senderId;
     }
 
     /**
-     * Sender ID of sent message.
+     * The sender ID that is shown as the message sender on the recipient's
+     * device. Support for sender IDs varies by country or region.
      *
-     * @param senderId Sender ID of sent message.
+     * @param senderId The sender ID that is shown as the message sender on the
+     *            recipient's device. Support for sender IDs varies by country
+     *            or region.
      */
     public void setSenderId(String senderId) {
         this.senderId = senderId;
     }
 
     /**
-     * Sender ID of sent message.
+     * The sender ID that is shown as the message sender on the recipient's
+     * device. Support for sender IDs varies by country or region.
      * <p>
      * Returns a reference to this object so that method calls can be chained
      * together.
      *
-     * @param senderId Sender ID of sent message.
+     * @param senderId The sender ID that is shown as the message sender on the
+     *            recipient's device. Support for sender IDs varies by country
+     *            or region.
      * @return A reference to this updated object so that method calls can be
      *         chained together.
      */
@@ -283,8 +397,12 @@ public class SMSMessage implements Serializable {
         sb.append("{");
         if (getBody() != null)
             sb.append("Body: " + getBody() + ",");
+        if (getKeyword() != null)
+            sb.append("Keyword: " + getKeyword() + ",");
         if (getMessageType() != null)
             sb.append("MessageType: " + getMessageType() + ",");
+        if (getOriginationNumber() != null)
+            sb.append("OriginationNumber: " + getOriginationNumber() + ",");
         if (getSenderId() != null)
             sb.append("SenderId: " + getSenderId() + ",");
         if (getSubstitutions() != null)
@@ -299,8 +417,11 @@ public class SMSMessage implements Serializable {
         int hashCode = 1;
 
         hashCode = prime * hashCode + ((getBody() == null) ? 0 : getBody().hashCode());
+        hashCode = prime * hashCode + ((getKeyword() == null) ? 0 : getKeyword().hashCode());
         hashCode = prime * hashCode
                 + ((getMessageType() == null) ? 0 : getMessageType().hashCode());
+        hashCode = prime * hashCode
+                + ((getOriginationNumber() == null) ? 0 : getOriginationNumber().hashCode());
         hashCode = prime * hashCode + ((getSenderId() == null) ? 0 : getSenderId().hashCode());
         hashCode = prime * hashCode
                 + ((getSubstitutions() == null) ? 0 : getSubstitutions().hashCode());
@@ -322,10 +443,19 @@ public class SMSMessage implements Serializable {
             return false;
         if (other.getBody() != null && other.getBody().equals(this.getBody()) == false)
             return false;
+        if (other.getKeyword() == null ^ this.getKeyword() == null)
+            return false;
+        if (other.getKeyword() != null && other.getKeyword().equals(this.getKeyword()) == false)
+            return false;
         if (other.getMessageType() == null ^ this.getMessageType() == null)
             return false;
         if (other.getMessageType() != null
                 && other.getMessageType().equals(this.getMessageType()) == false)
+            return false;
+        if (other.getOriginationNumber() == null ^ this.getOriginationNumber() == null)
+            return false;
+        if (other.getOriginationNumber() != null
+                && other.getOriginationNumber().equals(this.getOriginationNumber()) == false)
             return false;
         if (other.getSenderId() == null ^ this.getSenderId() == null)
             return false;

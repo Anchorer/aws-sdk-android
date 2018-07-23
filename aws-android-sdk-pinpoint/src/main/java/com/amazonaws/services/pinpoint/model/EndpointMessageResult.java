@@ -31,9 +31,14 @@ public class EndpointMessageResult implements Serializable {
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Allowed Values: </b>SUCCESSFUL, THROTTLED, TEMPORARY_FAILURE,
-     * PERMANENT_FAILURE
+     * PERMANENT_FAILURE, UNKNOWN_FAILURE, OPT_OUT, DUPLICATE
      */
     private String deliveryStatus;
+
+    /**
+     * Unique message identifier associated with the message that was sent.
+     */
+    private String messageId;
 
     /**
      * Downstream service status code.
@@ -88,7 +93,7 @@ public class EndpointMessageResult implements Serializable {
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Allowed Values: </b>SUCCESSFUL, THROTTLED, TEMPORARY_FAILURE,
-     * PERMANENT_FAILURE
+     * PERMANENT_FAILURE, UNKNOWN_FAILURE, OPT_OUT, DUPLICATE
      *
      * @return Delivery status of message.
      * @see DeliveryStatus
@@ -102,7 +107,7 @@ public class EndpointMessageResult implements Serializable {
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Allowed Values: </b>SUCCESSFUL, THROTTLED, TEMPORARY_FAILURE,
-     * PERMANENT_FAILURE
+     * PERMANENT_FAILURE, UNKNOWN_FAILURE, OPT_OUT, DUPLICATE
      *
      * @param deliveryStatus Delivery status of message.
      * @see DeliveryStatus
@@ -119,7 +124,7 @@ public class EndpointMessageResult implements Serializable {
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Allowed Values: </b>SUCCESSFUL, THROTTLED, TEMPORARY_FAILURE,
-     * PERMANENT_FAILURE
+     * PERMANENT_FAILURE, UNKNOWN_FAILURE, OPT_OUT, DUPLICATE
      *
      * @param deliveryStatus Delivery status of message.
      * @return A reference to this updated object so that method calls can be
@@ -136,7 +141,7 @@ public class EndpointMessageResult implements Serializable {
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Allowed Values: </b>SUCCESSFUL, THROTTLED, TEMPORARY_FAILURE,
-     * PERMANENT_FAILURE
+     * PERMANENT_FAILURE, UNKNOWN_FAILURE, OPT_OUT, DUPLICATE
      *
      * @param deliveryStatus Delivery status of message.
      * @see DeliveryStatus
@@ -153,7 +158,7 @@ public class EndpointMessageResult implements Serializable {
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Allowed Values: </b>SUCCESSFUL, THROTTLED, TEMPORARY_FAILURE,
-     * PERMANENT_FAILURE
+     * PERMANENT_FAILURE, UNKNOWN_FAILURE, OPT_OUT, DUPLICATE
      *
      * @param deliveryStatus Delivery status of message.
      * @return A reference to this updated object so that method calls can be
@@ -162,6 +167,42 @@ public class EndpointMessageResult implements Serializable {
      */
     public EndpointMessageResult withDeliveryStatus(DeliveryStatus deliveryStatus) {
         this.deliveryStatus = deliveryStatus.toString();
+        return this;
+    }
+
+    /**
+     * Unique message identifier associated with the message that was sent.
+     *
+     * @return Unique message identifier associated with the message that was
+     *         sent.
+     */
+    public String getMessageId() {
+        return messageId;
+    }
+
+    /**
+     * Unique message identifier associated with the message that was sent.
+     *
+     * @param messageId Unique message identifier associated with the message
+     *            that was sent.
+     */
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    /**
+     * Unique message identifier associated with the message that was sent.
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param messageId Unique message identifier associated with the message
+     *            that was sent.
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public EndpointMessageResult withMessageId(String messageId) {
+        this.messageId = messageId;
         return this;
     }
 
@@ -281,6 +322,8 @@ public class EndpointMessageResult implements Serializable {
             sb.append("Address: " + getAddress() + ",");
         if (getDeliveryStatus() != null)
             sb.append("DeliveryStatus: " + getDeliveryStatus() + ",");
+        if (getMessageId() != null)
+            sb.append("MessageId: " + getMessageId() + ",");
         if (getStatusCode() != null)
             sb.append("StatusCode: " + getStatusCode() + ",");
         if (getStatusMessage() != null)
@@ -299,6 +342,7 @@ public class EndpointMessageResult implements Serializable {
         hashCode = prime * hashCode + ((getAddress() == null) ? 0 : getAddress().hashCode());
         hashCode = prime * hashCode
                 + ((getDeliveryStatus() == null) ? 0 : getDeliveryStatus().hashCode());
+        hashCode = prime * hashCode + ((getMessageId() == null) ? 0 : getMessageId().hashCode());
         hashCode = prime * hashCode + ((getStatusCode() == null) ? 0 : getStatusCode().hashCode());
         hashCode = prime * hashCode
                 + ((getStatusMessage() == null) ? 0 : getStatusMessage().hashCode());
@@ -326,6 +370,11 @@ public class EndpointMessageResult implements Serializable {
             return false;
         if (other.getDeliveryStatus() != null
                 && other.getDeliveryStatus().equals(this.getDeliveryStatus()) == false)
+            return false;
+        if (other.getMessageId() == null ^ this.getMessageId() == null)
+            return false;
+        if (other.getMessageId() != null
+                && other.getMessageId().equals(this.getMessageId()) == false)
             return false;
         if (other.getStatusCode() == null ^ this.getStatusCode() == null)
             return false;

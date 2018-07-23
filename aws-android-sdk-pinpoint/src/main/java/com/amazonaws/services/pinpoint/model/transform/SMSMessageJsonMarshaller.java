@@ -30,10 +30,20 @@ class SMSMessageJsonMarshaller {
             jsonWriter.name("Body");
             jsonWriter.value(body);
         }
+        if (sMSMessage.getKeyword() != null) {
+            String keyword = sMSMessage.getKeyword();
+            jsonWriter.name("Keyword");
+            jsonWriter.value(keyword);
+        }
         if (sMSMessage.getMessageType() != null) {
             String messageType = sMSMessage.getMessageType();
             jsonWriter.name("MessageType");
             jsonWriter.value(messageType);
+        }
+        if (sMSMessage.getOriginationNumber() != null) {
+            String originationNumber = sMSMessage.getOriginationNumber();
+            jsonWriter.name("OriginationNumber");
+            jsonWriter.value(originationNumber);
         }
         if (sMSMessage.getSenderId() != null) {
             String senderId = sMSMessage.getSenderId();

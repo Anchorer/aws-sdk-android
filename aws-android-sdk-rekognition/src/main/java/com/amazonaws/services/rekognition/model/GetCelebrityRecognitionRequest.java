@@ -21,20 +21,24 @@ import com.amazonaws.AmazonWebServiceRequest;
 
 /**
  * <p>
- * Gets the celebrity recognition results for a Rekognition Video analysis
- * started by .
+ * Gets the celebrity recognition results for a Amazon Rekognition Video
+ * analysis started by .
  * </p>
  * <p>
  * Celebrity recognition in a video is an asynchronous operation. Analysis is
  * started by a call to which returns a job identifier (<code>JobId</code>).
- * When the celebrity recognition operation finishes, Rekognition Video
+ * When the celebrity recognition operation finishes, Amazon Rekognition Video
  * publishes a completion status to the Amazon Simple Notification Service topic
  * registered in the initial call to <code>StartCelebrityRecognition</code>. To
  * get the results of the celebrity recognition analysis, first check that the
  * status value published to the Amazon SNS topic is <code>SUCCEEDED</code>. If
  * so, call <code>GetCelebrityDetection</code> and pass the job identifier (
  * <code>JobId</code>) from the initial call to
- * <code>StartCelebrityDetection</code>. For more information, see <a>video</a>.
+ * <code>StartCelebrityDetection</code>.
+ * </p>
+ * <p>
+ * For more information, see Working With Stored Videos in the Amazon
+ * Rekognition Developer Guide.
  * </p>
  * <p>
  * <code>GetCelebrityRecognition</code> returns detected celebrities and the
@@ -43,6 +47,16 @@ import com.amazonaws.AmazonWebServiceRequest;
  * celebrity in a object and the time, <code>Timestamp</code>, the celebrity was
  * detected.
  * </p>
+ * <note>
+ * <p>
+ * <code>GetCelebrityRecognition</code> only returns the default facial
+ * attributes (<code>BoundingBox</code>, <code>Confidence</code>,
+ * <code>Landmarks</code>, <code>Pose</code>, and <code>Quality</code>). The
+ * other facial attributes listed in the <code>Face</code> object of the
+ * following response syntax are not returned. For more information, see
+ * FaceDetail in the Amazon Rekognition Developer Guide.
+ * </p>
+ * </note>
  * <p>
  * By default, the <code>Celebrities</code> array is sorted by time
  * (milliseconds from the start of the video). You can also sort the array by
@@ -83,8 +97,9 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
 
     /**
      * <p>
-     * Maximum number of celebrities you want Rekognition Video to return in the
-     * response. The default is 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -95,9 +110,9 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
     /**
      * <p>
      * If the previous response was incomplete (because there is more recognized
-     * celebrities to retrieve), Rekognition Video returns a pagination token in
-     * the response. You can use this pagination token to retrieve the next set
-     * of celebrities.
+     * celebrities to retrieve), Amazon Rekognition Video returns a pagination
+     * token in the response. You can use this pagination token to retrieve the
+     * next set of celebrities.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -188,16 +203,19 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
 
     /**
      * <p>
-     * Maximum number of celebrities you want Rekognition Video to return in the
-     * response. The default is 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Range: </b>1 - <br/>
      *
      * @return <p>
-     *         Maximum number of celebrities you want Rekognition Video to
-     *         return in the response. The default is 1000.
+     *         Maximum number of results to return per paginated call. The
+     *         largest value you can specify is 1000. If you specify a value
+     *         greater than 1000, a maximum of 1000 results is returned. The
+     *         default value is 1000.
      *         </p>
      */
     public Integer getMaxResults() {
@@ -206,16 +224,19 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
 
     /**
      * <p>
-     * Maximum number of celebrities you want Rekognition Video to return in the
-     * response. The default is 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
      * <b>Range: </b>1 - <br/>
      *
      * @param maxResults <p>
-     *            Maximum number of celebrities you want Rekognition Video to
-     *            return in the response. The default is 1000.
+     *            Maximum number of results to return per paginated call. The
+     *            largest value you can specify is 1000. If you specify a value
+     *            greater than 1000, a maximum of 1000 results is returned. The
+     *            default value is 1000.
      *            </p>
      */
     public void setMaxResults(Integer maxResults) {
@@ -224,8 +245,9 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
 
     /**
      * <p>
-     * Maximum number of celebrities you want Rekognition Video to return in the
-     * response. The default is 1000.
+     * Maximum number of results to return per paginated call. The largest value
+     * you can specify is 1000. If you specify a value greater than 1000, a
+     * maximum of 1000 results is returned. The default value is 1000.
      * </p>
      * <p>
      * Returns a reference to this object so that method calls can be chained
@@ -235,8 +257,10 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
      * <b>Range: </b>1 - <br/>
      *
      * @param maxResults <p>
-     *            Maximum number of celebrities you want Rekognition Video to
-     *            return in the response. The default is 1000.
+     *            Maximum number of results to return per paginated call. The
+     *            largest value you can specify is 1000. If you specify a value
+     *            greater than 1000, a maximum of 1000 results is returned. The
+     *            default value is 1000.
      *            </p>
      * @return A reference to this updated object so that method calls can be
      *         chained together.
@@ -249,9 +273,9 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
     /**
      * <p>
      * If the previous response was incomplete (because there is more recognized
-     * celebrities to retrieve), Rekognition Video returns a pagination token in
-     * the response. You can use this pagination token to retrieve the next set
-     * of celebrities.
+     * celebrities to retrieve), Amazon Rekognition Video returns a pagination
+     * token in the response. You can use this pagination token to retrieve the
+     * next set of celebrities.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -259,9 +283,9 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
      *
      * @return <p>
      *         If the previous response was incomplete (because there is more
-     *         recognized celebrities to retrieve), Rekognition Video returns a
-     *         pagination token in the response. You can use this pagination
-     *         token to retrieve the next set of celebrities.
+     *         recognized celebrities to retrieve), Amazon Rekognition Video
+     *         returns a pagination token in the response. You can use this
+     *         pagination token to retrieve the next set of celebrities.
      *         </p>
      */
     public String getNextToken() {
@@ -271,9 +295,9 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
     /**
      * <p>
      * If the previous response was incomplete (because there is more recognized
-     * celebrities to retrieve), Rekognition Video returns a pagination token in
-     * the response. You can use this pagination token to retrieve the next set
-     * of celebrities.
+     * celebrities to retrieve), Amazon Rekognition Video returns a pagination
+     * token in the response. You can use this pagination token to retrieve the
+     * next set of celebrities.
      * </p>
      * <p>
      * <b>Constraints:</b><br/>
@@ -281,8 +305,8 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
      *
      * @param nextToken <p>
      *            If the previous response was incomplete (because there is more
-     *            recognized celebrities to retrieve), Rekognition Video returns
-     *            a pagination token in the response. You can use this
+     *            recognized celebrities to retrieve), Amazon Rekognition Video
+     *            returns a pagination token in the response. You can use this
      *            pagination token to retrieve the next set of celebrities.
      *            </p>
      */
@@ -293,9 +317,9 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
     /**
      * <p>
      * If the previous response was incomplete (because there is more recognized
-     * celebrities to retrieve), Rekognition Video returns a pagination token in
-     * the response. You can use this pagination token to retrieve the next set
-     * of celebrities.
+     * celebrities to retrieve), Amazon Rekognition Video returns a pagination
+     * token in the response. You can use this pagination token to retrieve the
+     * next set of celebrities.
      * </p>
      * <p>
      * Returns a reference to this object so that method calls can be chained
@@ -306,8 +330,8 @@ public class GetCelebrityRecognitionRequest extends AmazonWebServiceRequest impl
      *
      * @param nextToken <p>
      *            If the previous response was incomplete (because there is more
-     *            recognized celebrities to retrieve), Rekognition Video returns
-     *            a pagination token in the response. You can use this
+     *            recognized celebrities to retrieve), Amazon Rekognition Video
+     *            returns a pagination token in the response. You can use this
      *            pagination token to retrieve the next set of celebrities.
      *            </p>
      * @return A reference to this updated object so that method calls can be

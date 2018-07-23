@@ -64,12 +64,6 @@ public class BaiduMessage implements Serializable {
     private String imageUrl;
 
     /**
-     * The data payload used for a silent push. This payload is added to the
-     * notifications' data.pinpoint.jsonBody' object
-     */
-    private String jsonData;
-
-    /**
      * The Raw JSON formatted string to be used as the payload. This value
      * overrides the message.
      */
@@ -100,6 +94,13 @@ public class BaiduMessage implements Serializable {
      * substitutions.
      */
     private java.util.Map<String, java.util.List<String>> substitutions;
+
+    /**
+     * This parameter specifies how long (in seconds) the message should be kept
+     * in Baidu storage if the device is offline. The and the default value and
+     * the maximum time to live supported is 7 days (604800 seconds)
+     */
+    private Integer timeToLive;
 
     /**
      * The message title that displays above the message on the user's device.
@@ -483,45 +484,6 @@ public class BaiduMessage implements Serializable {
     }
 
     /**
-     * The data payload used for a silent push. This payload is added to the
-     * notifications' data.pinpoint.jsonBody' object
-     *
-     * @return The data payload used for a silent push. This payload is added to
-     *         the notifications' data.pinpoint.jsonBody' object
-     */
-    public String getJsonData() {
-        return jsonData;
-    }
-
-    /**
-     * The data payload used for a silent push. This payload is added to the
-     * notifications' data.pinpoint.jsonBody' object
-     *
-     * @param jsonData The data payload used for a silent push. This payload is
-     *            added to the notifications' data.pinpoint.jsonBody' object
-     */
-    public void setJsonData(String jsonData) {
-        this.jsonData = jsonData;
-    }
-
-    /**
-     * The data payload used for a silent push. This payload is added to the
-     * notifications' data.pinpoint.jsonBody' object
-     * <p>
-     * Returns a reference to this object so that method calls can be chained
-     * together.
-     *
-     * @param jsonData The data payload used for a silent push. This payload is
-     *            added to the notifications' data.pinpoint.jsonBody' object
-     * @return A reference to this updated object so that method calls can be
-     *         chained together.
-     */
-    public BaiduMessage withJsonData(String jsonData) {
-        this.jsonData = jsonData;
-        return this;
-    }
-
-    /**
      * The Raw JSON formatted string to be used as the payload. This value
      * overrides the message.
      *
@@ -784,6 +746,54 @@ public class BaiduMessage implements Serializable {
     }
 
     /**
+     * This parameter specifies how long (in seconds) the message should be kept
+     * in Baidu storage if the device is offline. The and the default value and
+     * the maximum time to live supported is 7 days (604800 seconds)
+     *
+     * @return This parameter specifies how long (in seconds) the message should
+     *         be kept in Baidu storage if the device is offline. The and the
+     *         default value and the maximum time to live supported is 7 days
+     *         (604800 seconds)
+     */
+    public Integer getTimeToLive() {
+        return timeToLive;
+    }
+
+    /**
+     * This parameter specifies how long (in seconds) the message should be kept
+     * in Baidu storage if the device is offline. The and the default value and
+     * the maximum time to live supported is 7 days (604800 seconds)
+     *
+     * @param timeToLive This parameter specifies how long (in seconds) the
+     *            message should be kept in Baidu storage if the device is
+     *            offline. The and the default value and the maximum time to
+     *            live supported is 7 days (604800 seconds)
+     */
+    public void setTimeToLive(Integer timeToLive) {
+        this.timeToLive = timeToLive;
+    }
+
+    /**
+     * This parameter specifies how long (in seconds) the message should be kept
+     * in Baidu storage if the device is offline. The and the default value and
+     * the maximum time to live supported is 7 days (604800 seconds)
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param timeToLive This parameter specifies how long (in seconds) the
+     *            message should be kept in Baidu storage if the device is
+     *            offline. The and the default value and the maximum time to
+     *            live supported is 7 days (604800 seconds)
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public BaiduMessage withTimeToLive(Integer timeToLive) {
+        this.timeToLive = timeToLive;
+        return this;
+    }
+
+    /**
      * The message title that displays above the message on the user's device.
      *
      * @return The message title that displays above the message on the user's
@@ -881,8 +891,6 @@ public class BaiduMessage implements Serializable {
             sb.append("ImageIconUrl: " + getImageIconUrl() + ",");
         if (getImageUrl() != null)
             sb.append("ImageUrl: " + getImageUrl() + ",");
-        if (getJsonData() != null)
-            sb.append("JsonData: " + getJsonData() + ",");
         if (getRawContent() != null)
             sb.append("RawContent: " + getRawContent() + ",");
         if (getSilentPush() != null)
@@ -893,6 +901,8 @@ public class BaiduMessage implements Serializable {
             sb.append("Sound: " + getSound() + ",");
         if (getSubstitutions() != null)
             sb.append("Substitutions: " + getSubstitutions() + ",");
+        if (getTimeToLive() != null)
+            sb.append("TimeToLive: " + getTimeToLive() + ",");
         if (getTitle() != null)
             sb.append("Title: " + getTitle() + ",");
         if (getUrl() != null)
@@ -914,7 +924,6 @@ public class BaiduMessage implements Serializable {
         hashCode = prime * hashCode
                 + ((getImageIconUrl() == null) ? 0 : getImageIconUrl().hashCode());
         hashCode = prime * hashCode + ((getImageUrl() == null) ? 0 : getImageUrl().hashCode());
-        hashCode = prime * hashCode + ((getJsonData() == null) ? 0 : getJsonData().hashCode());
         hashCode = prime * hashCode + ((getRawContent() == null) ? 0 : getRawContent().hashCode());
         hashCode = prime * hashCode + ((getSilentPush() == null) ? 0 : getSilentPush().hashCode());
         hashCode = prime * hashCode
@@ -922,6 +931,7 @@ public class BaiduMessage implements Serializable {
         hashCode = prime * hashCode + ((getSound() == null) ? 0 : getSound().hashCode());
         hashCode = prime * hashCode
                 + ((getSubstitutions() == null) ? 0 : getSubstitutions().hashCode());
+        hashCode = prime * hashCode + ((getTimeToLive() == null) ? 0 : getTimeToLive().hashCode());
         hashCode = prime * hashCode + ((getTitle() == null) ? 0 : getTitle().hashCode());
         hashCode = prime * hashCode + ((getUrl() == null) ? 0 : getUrl().hashCode());
         return hashCode;
@@ -964,10 +974,6 @@ public class BaiduMessage implements Serializable {
             return false;
         if (other.getImageUrl() != null && other.getImageUrl().equals(this.getImageUrl()) == false)
             return false;
-        if (other.getJsonData() == null ^ this.getJsonData() == null)
-            return false;
-        if (other.getJsonData() != null && other.getJsonData().equals(this.getJsonData()) == false)
-            return false;
         if (other.getRawContent() == null ^ this.getRawContent() == null)
             return false;
         if (other.getRawContent() != null
@@ -991,6 +997,11 @@ public class BaiduMessage implements Serializable {
             return false;
         if (other.getSubstitutions() != null
                 && other.getSubstitutions().equals(this.getSubstitutions()) == false)
+            return false;
+        if (other.getTimeToLive() == null ^ this.getTimeToLive() == null)
+            return false;
+        if (other.getTimeToLive() != null
+                && other.getTimeToLive().equals(this.getTimeToLive()) == false)
             return false;
         if (other.getTitle() == null ^ this.getTitle() == null)
             return false;

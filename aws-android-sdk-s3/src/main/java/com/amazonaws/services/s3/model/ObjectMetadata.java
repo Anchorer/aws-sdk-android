@@ -827,6 +827,15 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     public Date getHttpExpiresDate() {
         return cloneDate(httpExpiresDate);
     }
+    
+    /**
+     * Sets the Amazon S3 storage class for the stored objects.
+     * 
+     * @param storageClass The Amazon S3 storage class for the stored objects.
+     */
+    public void setStorageClass(StorageClass storageClass) {
+    	metadata.put(Headers.STORAGE_CLASS, storageClass);
+    }
 
     /**
      * @return The storage class of the object. Returns null if the object is in STANDARD storage.

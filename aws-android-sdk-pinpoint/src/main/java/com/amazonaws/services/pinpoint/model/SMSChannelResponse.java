@@ -37,6 +37,11 @@ public class SMSChannelResponse implements Serializable {
     private Boolean enabled;
 
     /**
+     * Not used. Retained for backwards compatibility.
+     */
+    private Boolean hasCredential;
+
+    /**
      * Channel ID. Not used, only for backwards compatibility.
      */
     private String id;
@@ -62,6 +67,11 @@ public class SMSChannelResponse implements Serializable {
     private String platform;
 
     /**
+     * Promotional messages per second that can be sent
+     */
+    private Integer promotionalMessagesPerSecond;
+
+    /**
      * Sender identifier of your messages.
      */
     private String senderId;
@@ -70,6 +80,11 @@ public class SMSChannelResponse implements Serializable {
      * The short code registered with the phone provider.
      */
     private String shortCode;
+
+    /**
+     * Transactional messages per second that can be sent
+     */
+    private Integer transactionalMessagesPerSecond;
 
     /**
      * Version of channel
@@ -186,6 +201,48 @@ public class SMSChannelResponse implements Serializable {
      */
     public SMSChannelResponse withEnabled(Boolean enabled) {
         this.enabled = enabled;
+        return this;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @return Not used. Retained for backwards compatibility.
+     */
+    public Boolean isHasCredential() {
+        return hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @return Not used. Retained for backwards compatibility.
+     */
+    public Boolean getHasCredential() {
+        return hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @param hasCredential Not used. Retained for backwards compatibility.
+     */
+    public void setHasCredential(Boolean hasCredential) {
+        this.hasCredential = hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param hasCredential Not used. Retained for backwards compatibility.
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public SMSChannelResponse withHasCredential(Boolean hasCredential) {
+        this.hasCredential = hasCredential;
         return this;
     }
 
@@ -364,6 +421,41 @@ public class SMSChannelResponse implements Serializable {
     }
 
     /**
+     * Promotional messages per second that can be sent
+     *
+     * @return Promotional messages per second that can be sent
+     */
+    public Integer getPromotionalMessagesPerSecond() {
+        return promotionalMessagesPerSecond;
+    }
+
+    /**
+     * Promotional messages per second that can be sent
+     *
+     * @param promotionalMessagesPerSecond Promotional messages per second that
+     *            can be sent
+     */
+    public void setPromotionalMessagesPerSecond(Integer promotionalMessagesPerSecond) {
+        this.promotionalMessagesPerSecond = promotionalMessagesPerSecond;
+    }
+
+    /**
+     * Promotional messages per second that can be sent
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param promotionalMessagesPerSecond Promotional messages per second that
+     *            can be sent
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public SMSChannelResponse withPromotionalMessagesPerSecond(Integer promotionalMessagesPerSecond) {
+        this.promotionalMessagesPerSecond = promotionalMessagesPerSecond;
+        return this;
+    }
+
+    /**
      * Sender identifier of your messages.
      *
      * @return Sender identifier of your messages.
@@ -430,6 +522,42 @@ public class SMSChannelResponse implements Serializable {
     }
 
     /**
+     * Transactional messages per second that can be sent
+     *
+     * @return Transactional messages per second that can be sent
+     */
+    public Integer getTransactionalMessagesPerSecond() {
+        return transactionalMessagesPerSecond;
+    }
+
+    /**
+     * Transactional messages per second that can be sent
+     *
+     * @param transactionalMessagesPerSecond Transactional messages per second
+     *            that can be sent
+     */
+    public void setTransactionalMessagesPerSecond(Integer transactionalMessagesPerSecond) {
+        this.transactionalMessagesPerSecond = transactionalMessagesPerSecond;
+    }
+
+    /**
+     * Transactional messages per second that can be sent
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param transactionalMessagesPerSecond Transactional messages per second
+     *            that can be sent
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public SMSChannelResponse withTransactionalMessagesPerSecond(
+            Integer transactionalMessagesPerSecond) {
+        this.transactionalMessagesPerSecond = transactionalMessagesPerSecond;
+        return this;
+    }
+
+    /**
      * Version of channel
      *
      * @return Version of channel
@@ -479,6 +607,8 @@ public class SMSChannelResponse implements Serializable {
             sb.append("CreationDate: " + getCreationDate() + ",");
         if (getEnabled() != null)
             sb.append("Enabled: " + getEnabled() + ",");
+        if (getHasCredential() != null)
+            sb.append("HasCredential: " + getHasCredential() + ",");
         if (getId() != null)
             sb.append("Id: " + getId() + ",");
         if (getIsArchived() != null)
@@ -489,10 +619,15 @@ public class SMSChannelResponse implements Serializable {
             sb.append("LastModifiedDate: " + getLastModifiedDate() + ",");
         if (getPlatform() != null)
             sb.append("Platform: " + getPlatform() + ",");
+        if (getPromotionalMessagesPerSecond() != null)
+            sb.append("PromotionalMessagesPerSecond: " + getPromotionalMessagesPerSecond() + ",");
         if (getSenderId() != null)
             sb.append("SenderId: " + getSenderId() + ",");
         if (getShortCode() != null)
             sb.append("ShortCode: " + getShortCode() + ",");
+        if (getTransactionalMessagesPerSecond() != null)
+            sb.append("TransactionalMessagesPerSecond: " + getTransactionalMessagesPerSecond()
+                    + ",");
         if (getVersion() != null)
             sb.append("Version: " + getVersion());
         sb.append("}");
@@ -509,6 +644,8 @@ public class SMSChannelResponse implements Serializable {
         hashCode = prime * hashCode
                 + ((getCreationDate() == null) ? 0 : getCreationDate().hashCode());
         hashCode = prime * hashCode + ((getEnabled() == null) ? 0 : getEnabled().hashCode());
+        hashCode = prime * hashCode
+                + ((getHasCredential() == null) ? 0 : getHasCredential().hashCode());
         hashCode = prime * hashCode + ((getId() == null) ? 0 : getId().hashCode());
         hashCode = prime * hashCode + ((getIsArchived() == null) ? 0 : getIsArchived().hashCode());
         hashCode = prime * hashCode
@@ -516,8 +653,16 @@ public class SMSChannelResponse implements Serializable {
         hashCode = prime * hashCode
                 + ((getLastModifiedDate() == null) ? 0 : getLastModifiedDate().hashCode());
         hashCode = prime * hashCode + ((getPlatform() == null) ? 0 : getPlatform().hashCode());
+        hashCode = prime
+                * hashCode
+                + ((getPromotionalMessagesPerSecond() == null) ? 0
+                        : getPromotionalMessagesPerSecond().hashCode());
         hashCode = prime * hashCode + ((getSenderId() == null) ? 0 : getSenderId().hashCode());
         hashCode = prime * hashCode + ((getShortCode() == null) ? 0 : getShortCode().hashCode());
+        hashCode = prime
+                * hashCode
+                + ((getTransactionalMessagesPerSecond() == null) ? 0
+                        : getTransactionalMessagesPerSecond().hashCode());
         hashCode = prime * hashCode + ((getVersion() == null) ? 0 : getVersion().hashCode());
         return hashCode;
     }
@@ -547,6 +692,11 @@ public class SMSChannelResponse implements Serializable {
             return false;
         if (other.getEnabled() != null && other.getEnabled().equals(this.getEnabled()) == false)
             return false;
+        if (other.getHasCredential() == null ^ this.getHasCredential() == null)
+            return false;
+        if (other.getHasCredential() != null
+                && other.getHasCredential().equals(this.getHasCredential()) == false)
+            return false;
         if (other.getId() == null ^ this.getId() == null)
             return false;
         if (other.getId() != null && other.getId().equals(this.getId()) == false)
@@ -570,6 +720,13 @@ public class SMSChannelResponse implements Serializable {
             return false;
         if (other.getPlatform() != null && other.getPlatform().equals(this.getPlatform()) == false)
             return false;
+        if (other.getPromotionalMessagesPerSecond() == null
+                ^ this.getPromotionalMessagesPerSecond() == null)
+            return false;
+        if (other.getPromotionalMessagesPerSecond() != null
+                && other.getPromotionalMessagesPerSecond().equals(
+                        this.getPromotionalMessagesPerSecond()) == false)
+            return false;
         if (other.getSenderId() == null ^ this.getSenderId() == null)
             return false;
         if (other.getSenderId() != null && other.getSenderId().equals(this.getSenderId()) == false)
@@ -578,6 +735,13 @@ public class SMSChannelResponse implements Serializable {
             return false;
         if (other.getShortCode() != null
                 && other.getShortCode().equals(this.getShortCode()) == false)
+            return false;
+        if (other.getTransactionalMessagesPerSecond() == null
+                ^ this.getTransactionalMessagesPerSecond() == null)
+            return false;
+        if (other.getTransactionalMessagesPerSecond() != null
+                && other.getTransactionalMessagesPerSecond().equals(
+                        this.getTransactionalMessagesPerSecond()) == false)
             return false;
         if (other.getVersion() == null ^ this.getVersion() == null)
             return false;

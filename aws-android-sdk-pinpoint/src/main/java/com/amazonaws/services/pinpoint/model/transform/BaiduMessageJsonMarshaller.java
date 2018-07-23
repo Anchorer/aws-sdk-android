@@ -63,11 +63,6 @@ class BaiduMessageJsonMarshaller {
             jsonWriter.name("ImageUrl");
             jsonWriter.value(imageUrl);
         }
-        if (baiduMessage.getJsonData() != null) {
-            String jsonData = baiduMessage.getJsonData();
-            jsonWriter.name("JsonData");
-            jsonWriter.value(jsonData);
-        }
         if (baiduMessage.getRawContent() != null) {
             String rawContent = baiduMessage.getRawContent();
             jsonWriter.name("RawContent");
@@ -108,6 +103,11 @@ class BaiduMessageJsonMarshaller {
                 }
             }
             jsonWriter.endObject();
+        }
+        if (baiduMessage.getTimeToLive() != null) {
+            Integer timeToLive = baiduMessage.getTimeToLive();
+            jsonWriter.name("TimeToLive");
+            jsonWriter.value(timeToLive);
         }
         if (baiduMessage.getTitle() != null) {
             String title = baiduMessage.getTitle();

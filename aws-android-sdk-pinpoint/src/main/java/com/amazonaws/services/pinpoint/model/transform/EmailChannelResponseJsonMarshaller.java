@@ -46,6 +46,11 @@ class EmailChannelResponseJsonMarshaller {
             jsonWriter.name("FromAddress");
             jsonWriter.value(fromAddress);
         }
+        if (emailChannelResponse.getHasCredential() != null) {
+            Boolean hasCredential = emailChannelResponse.getHasCredential();
+            jsonWriter.name("HasCredential");
+            jsonWriter.value(hasCredential);
+        }
         if (emailChannelResponse.getId() != null) {
             String id = emailChannelResponse.getId();
             jsonWriter.name("Id");
@@ -70,6 +75,11 @@ class EmailChannelResponseJsonMarshaller {
             String lastModifiedDate = emailChannelResponse.getLastModifiedDate();
             jsonWriter.name("LastModifiedDate");
             jsonWriter.value(lastModifiedDate);
+        }
+        if (emailChannelResponse.getMessagesPerSecond() != null) {
+            Integer messagesPerSecond = emailChannelResponse.getMessagesPerSecond();
+            jsonWriter.name("MessagesPerSecond");
+            jsonWriter.value(messagesPerSecond);
         }
         if (emailChannelResponse.getPlatform() != null) {
             String platform = emailChannelResponse.getPlatform();

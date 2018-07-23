@@ -390,6 +390,7 @@ public class AmazonCognitoIdentityClient extends AmazonWebServiceClient implemen
 
             return response.getAwsResponse();
         } finally {
+            awsRequestMetrics.endEvent(Field.ClientExecuteTime);
             endClientExecution(awsRequestMetrics, request, response, LOGGING_AWS_REQUEST_METRIC);
         }
     }
@@ -403,7 +404,9 @@ public class AmazonCognitoIdentityClient extends AmazonWebServiceClient implemen
      * This is a public API. You do not need any credentials to call this API.
      * </p>
      * 
-     * @param getIdRequest Input to the GetId action.
+     * @param getIdRequest <p>
+     *            Input to the GetId action.
+     *            </p>
      * @return getIdResult The response from the GetId service method, as
      *         returned by Amazon Cognito Identity.
      * @throws InvalidParameterException
@@ -446,6 +449,7 @@ public class AmazonCognitoIdentityClient extends AmazonWebServiceClient implemen
 
             return response.getAwsResponse();
         } finally {
+            awsRequestMetrics.endEvent(Field.ClientExecuteTime);
             endClientExecution(awsRequestMetrics, request, response, LOGGING_AWS_REQUEST_METRIC);
         }
     }
@@ -463,7 +467,9 @@ public class AmazonCognitoIdentityClient extends AmazonWebServiceClient implemen
      * This is a public API. You do not need any credentials to call this API.
      * </p>
      * 
-     * @param getOpenIdTokenRequest Input to the GetOpenIdToken action.
+     * @param getOpenIdTokenRequest <p>
+     *            Input to the GetOpenIdToken action.
+     *            </p>
      * @return getOpenIdTokenResult The response from the GetOpenIdToken service
      *         method, as returned by Amazon Cognito Identity.
      * @throws InvalidParameterException
@@ -505,6 +511,7 @@ public class AmazonCognitoIdentityClient extends AmazonWebServiceClient implemen
 
             return response.getAwsResponse();
         } finally {
+            awsRequestMetrics.endEvent(Field.ClientExecuteTime);
             endClientExecution(awsRequestMetrics, request, response, LOGGING_AWS_REQUEST_METRIC);
         }
     }

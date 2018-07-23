@@ -703,10 +703,14 @@ class TransferDBUtil {
                 metadata.getContentDisposition());
         values.put(TransferTable.COLUMN_SSE_ALGORITHM, metadata.getSSEAlgorithm());
         values.put(TransferTable.COLUMN_SSE_KMS_KEY, metadata.getSSEAwsKmsKeyId());
-        values.put(TransferTable.COLUMN_EXPIRATION_TIME_RULE_ID, metadata.getExpirationTimeRuleId());
+        values.put(TransferTable.COLUMN_EXPIRATION_TIME_RULE_ID,
+                metadata.getExpirationTimeRuleId());
         if (metadata.getHttpExpiresDate() != null) {
             values.put(TransferTable.COLUMN_HTTP_EXPIRES_DATE,
                     String.valueOf(metadata.getHttpExpiresDate().getTime()));
+        }
+        if (metadata.getStorageClass() != null) {
+            values.put(TransferTable.COLUMN_HEADER_STORAGE_CLASS, metadata.getStorageClass());
         }
 
         return values;

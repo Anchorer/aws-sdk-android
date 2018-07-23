@@ -121,6 +121,9 @@ public class InternalConfig {
         ret.put("AmazonPinpointClient", new HttpClientConfig("mobiletargeting"));
         ret.put("AmazonPinpointAnalyticsClient", new HttpClientConfig("mobileanalytics"));
         ret.put("AmazonTranscribeClient", new HttpClientConfig("transcribe"));
+        ret.put("AmazonTranslateClient", new HttpClientConfig("translate"));
+        ret.put("AmazonComprehendClient", new HttpClientConfig("comprehend"));
+        ret.put("AWSKinesisVideoArchivedMediaClient", new HttpClientConfig("kinesisvideo"));
         return ret;
     }
 

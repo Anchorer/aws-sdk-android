@@ -22,7 +22,7 @@ import java.io.Serializable;
  */
 public class ADMChannelResponse implements Serializable {
     /**
-     * Application id
+     * The ID of the application to which the channel applies.
      */
     private String applicationId;
 
@@ -35,6 +35,11 @@ public class ADMChannelResponse implements Serializable {
      * If the channel is enabled for sending messages.
      */
     private Boolean enabled;
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     */
+    private Boolean hasCredential;
 
     /**
      * Channel ID. Not used, only for backwards compatibility.
@@ -67,30 +72,32 @@ public class ADMChannelResponse implements Serializable {
     private Integer version;
 
     /**
-     * Application id
+     * The ID of the application to which the channel applies.
      *
-     * @return Application id
+     * @return The ID of the application to which the channel applies.
      */
     public String getApplicationId() {
         return applicationId;
     }
 
     /**
-     * Application id
+     * The ID of the application to which the channel applies.
      *
-     * @param applicationId Application id
+     * @param applicationId The ID of the application to which the channel
+     *            applies.
      */
     public void setApplicationId(String applicationId) {
         this.applicationId = applicationId;
     }
 
     /**
-     * Application id
+     * The ID of the application to which the channel applies.
      * <p>
      * Returns a reference to this object so that method calls can be chained
      * together.
      *
-     * @param applicationId Application id
+     * @param applicationId The ID of the application to which the channel
+     *            applies.
      * @return A reference to this updated object so that method calls can be
      *         chained together.
      */
@@ -171,6 +178,48 @@ public class ADMChannelResponse implements Serializable {
      */
     public ADMChannelResponse withEnabled(Boolean enabled) {
         this.enabled = enabled;
+        return this;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @return Not used. Retained for backwards compatibility.
+     */
+    public Boolean isHasCredential() {
+        return hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @return Not used. Retained for backwards compatibility.
+     */
+    public Boolean getHasCredential() {
+        return hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     *
+     * @param hasCredential Not used. Retained for backwards compatibility.
+     */
+    public void setHasCredential(Boolean hasCredential) {
+        this.hasCredential = hasCredential;
+    }
+
+    /**
+     * Not used. Retained for backwards compatibility.
+     * <p>
+     * Returns a reference to this object so that method calls can be chained
+     * together.
+     *
+     * @param hasCredential Not used. Retained for backwards compatibility.
+     * @return A reference to this updated object so that method calls can be
+     *         chained together.
+     */
+    public ADMChannelResponse withHasCredential(Boolean hasCredential) {
+        this.hasCredential = hasCredential;
         return this;
     }
 
@@ -398,6 +447,8 @@ public class ADMChannelResponse implements Serializable {
             sb.append("CreationDate: " + getCreationDate() + ",");
         if (getEnabled() != null)
             sb.append("Enabled: " + getEnabled() + ",");
+        if (getHasCredential() != null)
+            sb.append("HasCredential: " + getHasCredential() + ",");
         if (getId() != null)
             sb.append("Id: " + getId() + ",");
         if (getIsArchived() != null)
@@ -424,6 +475,8 @@ public class ADMChannelResponse implements Serializable {
         hashCode = prime * hashCode
                 + ((getCreationDate() == null) ? 0 : getCreationDate().hashCode());
         hashCode = prime * hashCode + ((getEnabled() == null) ? 0 : getEnabled().hashCode());
+        hashCode = prime * hashCode
+                + ((getHasCredential() == null) ? 0 : getHasCredential().hashCode());
         hashCode = prime * hashCode + ((getId() == null) ? 0 : getId().hashCode());
         hashCode = prime * hashCode + ((getIsArchived() == null) ? 0 : getIsArchived().hashCode());
         hashCode = prime * hashCode
@@ -459,6 +512,11 @@ public class ADMChannelResponse implements Serializable {
         if (other.getEnabled() == null ^ this.getEnabled() == null)
             return false;
         if (other.getEnabled() != null && other.getEnabled().equals(this.getEnabled()) == false)
+            return false;
+        if (other.getHasCredential() == null ^ this.getHasCredential() == null)
+            return false;
+        if (other.getHasCredential() != null
+                && other.getHasCredential().equals(this.getHasCredential()) == false)
             return false;
         if (other.getId() == null ^ this.getId() == null)
             return false;
